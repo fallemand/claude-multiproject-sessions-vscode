@@ -89,5 +89,5 @@ export const createFixture = (livePid: number, base = tmpdir()) => {
   chmodSync(join(bin, "gh"), 0o755);
   chmodSync(join(bin, "claude"), 0o755);
 
-  return { root, claudeDir, alpha, worktree, beta, notes, bin, big };
+  return { root, claudeDir, alpha, worktree, notes, bin };
 };

@@ -46,7 +46,7 @@
     "type-check": "tsc --noEmit -p .",
     "vscode:prepublish": "pnpm build",
     "package": "vsce package --no-dependencies",
-    "test": "pnpm test:unit && pnpm test:integration",
+    "test": "pnpm test:unit && vscode-test",
     "test:unit": "pnpm build && node --test \"out/test/unit/*.test.js\"",
     "test:integration": "pnpm build && vscode-test"
   },
