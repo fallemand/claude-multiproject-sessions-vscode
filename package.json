@@ -44,7 +44,7 @@
     "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^4.1.1",
     "ovsx": "^1.4.0",
-    "typescript": "^5.9.0",
+    "typescript": "^7.0.2",
     "vite-plus": "1.7.0"
   },
   "contributes": {
@@ -298,5 +298,5 @@
   "engines": {
     "vscode": "^1.95.0"
   },
-  "packageManager": "pnpm@12.3.4"
+  "packageManager": "pnpm@12.21.0"
 }
