@@ -1,0 +1,7 @@
+**
+!out/**
+!media/logo.png
+!media/icon.svg
+!package.json
+!README.md
+!LICENSE

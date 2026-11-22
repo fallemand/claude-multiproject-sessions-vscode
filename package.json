@@ -1,0 +1,295 @@
+{
+  "name": "claude-multiproject-sessions",
+  "displayName": "Multi-Project Sessions for Claude Code",
+  "description": "All your Claude Code sessions across projects in one list. One click opens a session's worktree in VS Code and resumes it.",
+  "version": "0.0.1",
+  "private": true,
+  "packageManager": "pnpm@12.3.4",
+  "publisher": "fallemand",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fallemand/claude-multiproject-sessions-vscode"
+  },
+  "homepage": "https://github.com/fallemand/claude-multiproject-sessions-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/fallemand/claude-multiproject-sessions-vscode/issues"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "icon": "media/logo.png",
+  "galleryBanner": {
+    "color": "#C15F3C",
+    "theme": "dark"
+  },
+  "categories": [
+    "AI",
+    "Other"
+  ],
+  "keywords": [
+    "claude",
+    "claude code",
+    "sessions",
+    "resume",
+    "worktree",
+    "git",
+    "agent"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "scripts": {
+    "build": "rm -rf out && tsc -p .",
+    "watch": "tsc -watch -p .",
+    "type-check": "tsc --noEmit -p .",
+    "vscode:prepublish": "pnpm build",
+    "package": "vsce package --no-dependencies"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "Claude Sessions",
+      "properties": {
+        "claudeSessions.openIn": {
+          "type": "string",
+          "enum": [
+            "editor",
+            "terminal"
+          ],
+          "enumDescriptions": [
+            "Resume in a Claude Code tab (requires the Claude Code extension).",
+            "Resume with `claude --resume` in an integrated terminal."
+          ],
+          "default": "terminal",
+          "description": "Where clicking a session resumes it."
+        },
+        "claudeSessions.maxProjects": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "description": "Projects listed before the rest fold into a \"N more projects\" row. The current project and projects with live sessions are always listed."
+        },
+        "claudeSessions.maxPastSessions": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "description": "Past sessions listed per project before an \"N older\" row; each click on it shows this many more."
+        }
+      }
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "claudeSessions.list",
+          "name": "Claude Sessions",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "claudeSessions.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "claudeSessions.showLiveOnly",
+        "title": "Show Live Sessions Only",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "claudeSessions.showAll",
+        "title": "Show All Sessions",
+        "icon": "$(filter-filled)"
+      },
+      {
+        "command": "claudeSessions.groupByStatus",
+        "title": "Group by Status",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "claudeSessions.groupByRepo",
+        "title": "Group by Repository",
+        "icon": "$(repo)"
+      },
+      {
+        "command": "claudeSessions.pickLayout",
+        "title": "Row Layout…"
+      },
+      {
+        "command": "claudeSessions.toggleMore",
+        "title": "Show More"
+      },
+      {
+        "command": "claudeSessions.open",
+        "title": "Open Session",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "claudeSessions.openInNewWindow",
+        "title": "Open in New Window",
+        "icon": "$(empty-window)"
+      },
+      {
+        "command": "claudeSessions.resumeInEditor",
+        "title": "Resume in Claude Tab"
+      },
+      {
+        "command": "claudeSessions.resumeInTerminal",
+        "title": "Resume in Terminal",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "claudeSessions.copyId",
+        "title": "Copy Session ID"
+      },
+      {
+        "command": "claudeSessions.revealTranscript",
+        "title": "Reveal Transcript"
+      },
+      {
+        "command": "claudeSessions.openPr",
+        "title": "Open Pull Request",
+        "icon": "$(git-pull-request)"
+      },
+      {
+        "command": "claudeSessions.createWorktree",
+        "title": "Create Worktree for Branch",
+        "icon": "$(git-branch)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "claudeSessions.showLiveOnly",
+          "when": "view == claudeSessions.list && claudeSessions.filter == all",
+          "group": "navigation@1"
+        },
+        {
+          "command": "claudeSessions.showAll",
+          "when": "view == claudeSessions.list && claudeSessions.filter == live",
+          "group": "navigation@1"
+        },
+        {
+          "command": "claudeSessions.groupByStatus",
+          "when": "view == claudeSessions.list && claudeSessions.groupBy == repo",
+          "group": "navigation@2"
+        },
+        {
+          "command": "claudeSessions.groupByRepo",
+          "when": "view == claudeSessions.list && claudeSessions.groupBy == status",
+          "group": "navigation@2"
+        },
+        {
+          "command": "claudeSessions.refresh",
+          "when": "view == claudeSessions.list",
+          "group": "navigation@3"
+        },
+        {
+          "command": "claudeSessions.pickLayout",
+          "when": "view == claudeSessions.list",
+          "group": "1_layout"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "claudeSessions.openInNewWindow",
+          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "group": "inline"
+        },
+        {
+          "command": "claudeSessions.open",
+          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "group": "1_open@1"
+        },
+        {
+          "command": "claudeSessions.openInNewWindow",
+          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "group": "1_open@2"
+        },
+        {
+          "command": "claudeSessions.resumeInTerminal",
+          "when": "view == claudeSessions.list && viewItem =~ /^session/ && config.claudeSessions.openIn != terminal",
+          "group": "1_open@3"
+        },
+        {
+          "command": "claudeSessions.resumeInEditor",
+          "when": "view == claudeSessions.list && viewItem =~ /^session/ && config.claudeSessions.openIn == terminal",
+          "group": "1_open@3"
+        },
+        {
+          "command": "claudeSessions.openPr",
+          "when": "view == claudeSessions.list && viewItem =~ /hasPr/",
+          "group": "2_git@1"
+        },
+        {
+          "command": "claudeSessions.createWorktree",
+          "when": "view == claudeSessions.list && viewItem =~ /needsWorktree/",
+          "group": "2_git@2"
+        },
+        {
+          "command": "claudeSessions.copyId",
+          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "group": "3_info@1"
+        },
+        {
+          "command": "claudeSessions.revealTranscript",
+          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "group": "3_info@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "claudeSessions.toggleMore",
+          "when": "false"
+        },
+        {
+          "command": "claudeSessions.open",
+          "when": "false"
+        },
+        {
+          "command": "claudeSessions.openInNewWindow",
+          "when": "false"
+        },
+        {
+          "command": "claudeSessions.resumeInTerminal",
+          "when": "false"
+        },
+        {
+          "command": "claudeSessions.resumeInEditor",
+          "when": "false"
+        },
+        {
+          "command": "claudeSessions.copyId",
+          "when": "false"
+        },
+        {
+          "command": "claudeSessions.revealTranscript",
+          "when": "false"
+        },
+        {
+          "command": "claudeSessions.openPr",
+          "when": "false"
+        },
+        {
+          "command": "claudeSessions.createWorktree",
+          "when": "false"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "claudeSessions.list",
+        "contents": "No live Claude sessions.\n[Show All Sessions](command:claudeSessions.showAll)",
+        "when": "claudeSessions.filter == live"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "~1.95.0",
+    "@vscode/vsce": "^4.1.1",
+    "typescript": "^5.9.0"
+  }
+}
