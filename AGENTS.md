@@ -2,11 +2,7 @@
 
 Sidebar listing Claude Code sessions grouped by repo; clicking one opens its worktree/branch and resumes the session.
 
-Full plan, verified data sources and decisions: `PLAN.md`. Keep it updated when decisions change.
-
-## Phase
-Build phase: real data from `src/sessions/` (Claude files, git, `gh`), click flow in `src/actions/open.ts`. No mocks anymore.
-Start here: `PLAN.md` → "Build phase" (Done / Next / Open decisions). Next step is manual testing in the Extension Development Host.
+UI principle: the default view stays minimal (repo icon, then name + time); everything else lives in the tooltip, context menu or the "Detailed" layout.
 
 ## Run
 `pnpm install`, then F5 in VS Code (Extension Development Host); ⌘R in the dev host reloads after changes (`watch` task recompiles), ⇧⌘F5 for `package.json`/launch changes. `pnpm type-check` and `pnpm test` before committing.
@@ -25,4 +21,11 @@ Cross-window flows (click → other window → resume) only work with the extens
 - `src/sessions/` where the data comes from: `model.ts` (`Session`/`Repo`/`ClaudeSession` types, `isLive`, `needsWorktree`), `claude.ts` (session files, transcripts, watcher), `git.ts` (repo/worktree/branch/language, PRs via `gh`, attaches both to sessions)
 - `src/actions/` what the user can do: `commands.ts` (toolbar and row actions), `open.ts` (click flow: reveal live sessions where they run, worktree prompt, live-elsewhere warning, window switch + handoff, resume in terminal/Claude tab), `windows.ts` (shared folder, window registry, process ancestors)
 - `src/test/` integration test and the fixture both suites share
-- `media/` logo (`logo.svg` source, `logo.png` via `scripts/render-svg.swift`), view icon `icon.svg`
+- `media/` logo (`logo.svg` source, `logo.png` 256px for the Marketplace), view icon `icon.svg`
+
+## Claude Code data (private formats, verified against 2.1.3xx)
+Not public APIs: keep all parsing in `src/sessions/claude.ts` so format changes stay contained. `CLAUDE_CONFIG_DIR` overrides `~/.claude`.
+- Live sessions: `~/.claude/sessions/<pid>.json` (`pid`, `sessionId`, `cwd`, `name`, `nameSource`, `status` busy/idle, `entrypoint`, `updatedAt`). Ended once the pid stops running.
+- Transcripts: `~/.claude/projects/<cwd with non-alphanumerics as ->/<sessionId>.jsonl`. Lines carry `cwd`, `gitBranch`, `timestamp`; title order: live `name` (unless `nameSource: "derived"`), `custom-title`, last `ai-title`, `agent-name`, first typed prompt. `relocated` lines change the cwd. Excluded: SDK-only runs, no typed prompt, subagent transcripts.
+- Only the first 16 KB and last 64 KB of a transcript are read, each growing ×8 (max 8 MB) while empty; cached by mtime + size.
+- Claude tab: `claude-vscode.primaryEditor.open(sessionId)`; fallback `claude --resume <id>` in a terminal.
