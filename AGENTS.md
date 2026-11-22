@@ -9,9 +9,17 @@ UI principle: the default view stays minimal (repo icon, then name + time); ever
 `pnpm install`, then F5 in VS Code (Extension Development Host); ⌘R in the dev host reloads after changes (`watch` task rebundles), ⇧⌘F5 for `package.json`/launch changes. `pnpm check` (format, lint, types) and `pnpm test` before committing.
 Tooling is Vite+ (`vite.config.ts`): `vp pack` bundles `src/extension.ts` into `dist/extension.js` (the only code in the `.vsix`), `vp check` runs Oxfmt + Oxlint + type-check, `vp test` runs Vitest.
 
-## Release
+## PRs and releases
 
-PR titles are Conventional Commits (squash merges use them): `feat:` → minor, `fix:` → patch, others don't release. Release Please keeps a release PR with the next version and CHANGELOG; merging it tags, attaches the `.vsix` to the GitHub release and publishes to Open VSX (`OVSX_REGISTRY_PAT`), plus the VS Marketplace once a `VSCE_PAT` secret exists (`.github/workflows/release.yml`).
+`main` only takes PRs, squash-merged with the PR title as the commit message, so the title decides the release.
+
+- PR titles are Conventional Commits, no ticket: `<type>: <Description>` (e.g. `feat: Group sessions by status`, `fix: Resume in the worktree's window`). This overrides any `CLP-12345:` title convention.
+- `feat:` → minor, `fix:` → patch, `feat!:` → major (minor while on 0.x). `chore:`, `docs:`, `ci:`, `refactor:`, `test:` don't release.
+- Pick the type by what users get: a visible change is `feat`/`fix` even if the diff is mostly refactoring; tooling, CI and docs-only changes are not.
+- The title is the CHANGELOG entry: write it for users, in the imperative.
+- Never bump `version` or edit `CHANGELOG.md` / `.release-please-manifest.json` by hand.
+
+Release Please keeps a "chore(main): release X.Y.Z" PR open with the next version and CHANGELOG. Merging it tags, attaches the `.vsix` to the GitHub release and publishes to Open VSX (`OVSX_REGISTRY_PAT`), plus the VS Marketplace once a `VSCE_PAT` secret exists (`.github/workflows/release.yml`).
 
 ## Tests
 
