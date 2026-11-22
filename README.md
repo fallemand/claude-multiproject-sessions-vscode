@@ -14,34 +14,26 @@
 
 <p align="center"><img src="media/demo.gif" width="900" alt="Opening sessions from different projects: each one lands in its worktree and resumes in a terminal"></p>
 
-## 🤔 Why
+## Why
 
 The Claude Code extension only shows the sessions of the project you have open. Run a few in parallel across projects and you're juggling windows and terminals, each session on its own branch or worktree. Reviewing what one changed means going back to a terminal, finding its worktree and opening yet another window.
 
 This puts them all in one place and takes you straight to the code.
 
-## ✨ Features
+## Features
 
 <table>
   <tr>
-    <td width="50%">🗂️ <b>All projects, one list</b><br>Sessions grouped by project, worktrees under their repo. The project you're in comes first.</td>
-    <td width="50%">🟢 <b>See who needs you</b><br>Live sessions on top. The Explorer badge counts the ones waiting for your input.</td>
+    <td width="50%">🗂️ <b>All projects, one list</b><br>Sessions grouped by project, worktrees under their repo, live ones on top. The Explorer badge counts the ones waiting for you.</td>
+    <td width="50%">🚀 <b>One click to the code</b><br>Opens the session's worktree and branch in VS Code and resumes it in a terminal or a Claude tab.</td>
   </tr>
   <tr>
-    <td>🚀 <b>One click to the code</b><br>Opens the session's worktree and branch in VS Code and resumes it in a terminal or a Claude tab.</td>
     <td>🪟 <b>No duplicate windows</b><br>Folder already open? That window comes to the front. Session already running? You land in its terminal.</td>
-  </tr>
-  <tr>
     <td>🌳 <b>Worktree aware</b><br>Never switches your checkout under you. Offers a worktree for the session's branch instead.</td>
-    <td>🔀 <b>Pull requests</b><br>With the GitHub CLI, each session shows its branch's PR and opens it in one click.</td>
-  </tr>
-  <tr>
-    <td>🧘 <b>Quiet by default</b><br>Just name and time. Branch, PR and last reply live in the tooltip.</td>
-    <td>⚡ <b>Light</b><br>Reads only the start and end of each transcript, and does nothing while the view is hidden.</td>
   </tr>
 </table>
 
-## 🚀 Getting started
+## Getting started
 
 1. Install the extension.
 2. Open the Explorer and expand **Claude Sessions**.
@@ -49,7 +41,7 @@ This puts them all in one place and takes you straight to the code.
 
 Needs the [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI. Optional: the Claude Code VS Code extension (to resume in a Claude tab) and an authenticated [GitHub CLI](https://cli.github.com) (for PRs).
 
-## ⚙️ Settings
+## Settings
 
 | Setting | Default | |
 | --- | --- | --- |
@@ -59,7 +51,7 @@ Needs the [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI. Opt
 
 The section's toolbar filters live sessions, groups by status and picks a row layout. Right-click a session to open it in a new window, resume it the other way, open its PR or copy its ID.
 
-## 🔒 Privacy
+## Privacy
 
 Everything stays on your machine. It reads Claude Code's files in `~/.claude` without changing them, and runs `git` and `gh` locally. No telemetry, nothing sent anywhere. It only writes when you ask, to create a worktree or check out a branch.
 
@@ -73,7 +65,7 @@ Everything stays on your machine. It reads Claude Code's files in `~/.claude` wi
 
 </details>
 
-## 🛠️ Development
+## Development
 
 ```sh
 pnpm install
