@@ -88,7 +88,7 @@ UI settled (see above). All code is in place and type-checks; it has not been ex
 
 ### Open decisions
 - Repo topics (`claude-code`, `claude`, `vscode-extension`, `git-worktree`, `ai-agents`): adding them hit a GitHub API 403 on 2026-11-22; retry with `gh repo edit fallemand/claude-multiproject-sessions-vscode --add-topic ...`.
-- Publishing to the Marketplace (publisher `fallemand` needs an Azure DevOps PAT for `vsce publish`) and Open VSX (`ovsx publish`).
+- Publishing to the Marketplace (publisher `fallemand` needs an Azure DevOps PAT for `vsce publish`) and Open VSX (`ovsx publish`). Then uncomment the Marketplace/Open VSX badges in the README (Marketplace ones via vsmarketplacebadges.dev: shields.io retired them).
 
 ### Known limits
 - A crashed Claude process whose pid gets reused shows its session as live (live json has `procStart`, but its format/timezone differs from `ps -o lstart`).
