@@ -45,7 +45,10 @@
     "watch": "tsc -watch -p .",
     "type-check": "tsc --noEmit -p .",
     "vscode:prepublish": "pnpm build",
-    "package": "vsce package --no-dependencies"
+    "package": "vsce package --no-dependencies",
+    "test": "pnpm test:unit && pnpm test:integration",
+    "test:unit": "pnpm build && node --test \"out/test/unit/*.test.js\"",
+    "test:integration": "pnpm build && vscode-test"
   },
   "contributes": {
     "configuration": {
@@ -287,8 +290,11 @@
     ]
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.0.0",
     "@types/vscode": "~1.95.0",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^4.1.1",
     "typescript": "^5.9.0"
   }

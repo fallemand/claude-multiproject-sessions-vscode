@@ -6,7 +6,8 @@ import { ClaudeSession, Entrypoint } from "../model";
 
 // Formats verified against Claude Code 2.1.3xx, see PLAN.md "Data sources".
 
-const defaultDir = join(homedir(), ".claude");
+// Claude Code moves `~/.claude` to `CLAUDE_CONFIG_DIR` when set; tests point it at a fixture.
+const defaultDir = process.env.CLAUDE_CONFIG_DIR || join(homedir(), ".claude");
 const headSize = 16 << 10;
 const tailSize = 64 << 10;
 const maxRead = 8 << 20;

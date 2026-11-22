@@ -1,5 +1,6 @@
 **
-!out/**
+!out/*
+!out/sources/**
 !media/logo.png
 !media/icon.svg
 !package.json
