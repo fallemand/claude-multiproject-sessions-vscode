@@ -1,11 +1,12 @@
 import * as vscode from "vscode";
-import { registerCommands } from "./commands";
-import { isLive } from "./model";
+import { registerCommands } from "./actions/commands";
+import { consumeHandoff } from "./actions/open";
+import { registerWindow } from "./actions/windows";
 import { log } from "./log";
-import { consumeHandoff } from "./open";
-import { loadSessions, resolveRepo, watchClaudeSessions, withPrs } from "./sources";
-import { SessionsTree } from "./tree";
-import { registerWindow } from "./windows";
+import { readClaudeSessions, watchClaudeSessions } from "./sessions/claude";
+import { resolveRepo, withPrs, withRepos } from "./sessions/git";
+import { isLive } from "./sessions/model";
+import { SessionsView } from "./view";
 
 // Catches sessions whose process died without touching its file.
 const pollInterval = 30_000;
@@ -19,7 +20,7 @@ const currentRepos = async () => {
 };
 
 export const activate = (context: vscode.ExtensionContext) => {
-  const tree = new SessionsTree(context.globalState, []);
+  const tree = new SessionsView(context.globalState, []);
   const view = vscode.window.createTreeView("claudeSessions.list", { treeDataProvider: tree, showCollapseAll: true });
   view.message = "Loading sessions…";
 
@@ -42,7 +43,7 @@ export const activate = (context: vscode.ExtensionContext) => {
     try {
       do {
         dirty = false;
-        const sessions = await loadSessions();
+        const sessions = await withRepos(await readClaudeSessions());
         view.message = undefined;
         // Keep the previous PRs until fresh ones arrive, so rows don't flicker.
         const prs = new Map(tree.sessions.map((s) => [s.id, s.pr]));

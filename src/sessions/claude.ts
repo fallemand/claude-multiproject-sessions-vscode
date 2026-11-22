@@ -2,9 +2,9 @@ import { watch } from "node:fs";
 import { open, readdir, readFile, stat } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { ClaudeSession, Entrypoint } from "../model";
+import { ClaudeSession, Entrypoint } from "./model";
 
-// Formats verified against Claude Code 2.1.3xx, see PLAN.md "Data sources".
+// Formats verified against Claude Code 2.1.3xx, see AGENTS.md "Claude Code data".
 
 // Claude Code moves `~/.claude` to `CLAUDE_CONFIG_DIR` when set; tests point it at a fixture.
 const defaultDir = process.env.CLAUDE_CONFIG_DIR || join(homedir(), ".claude");

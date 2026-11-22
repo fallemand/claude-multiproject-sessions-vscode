@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Entrypoint, isLive, needsWorktree, PrState, Repo, Session, SessionStatus } from "./model";
+import { Entrypoint, isLive, needsWorktree, PrState, Repo, Session, SessionStatus } from "./sessions/model";
 
 export type ViewState = {
   filter: "all" | "live";
@@ -171,7 +171,7 @@ const sessionItem = (s: Session, state: ViewState) => {
   });
 };
 
-export class SessionsTree implements vscode.TreeDataProvider<Node>, vscode.FileDecorationProvider {
+export class SessionsView implements vscode.TreeDataProvider<Node>, vscode.FileDecorationProvider {
   private readonly changed = new vscode.EventEmitter<void>();
   readonly onDidChangeTreeData = this.changed.event;
   private readonly expandedMore = new Set<string>();

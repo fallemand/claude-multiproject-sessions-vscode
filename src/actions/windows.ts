@@ -4,8 +4,8 @@ import { tmpdir, userInfo } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import * as vscode from "vscode";
-import { log } from "./log";
-import { isRunning } from "./sources/claude";
+import { log } from "../log";
+import { isRunning } from "../sessions/claude";
 
 // Shared by every window of this user, across profiles (unlike the extension's global storage, which is per profile).
 export const sharedDir = join(tmpdir(), `claude-multiproject-sessions-${userInfo().uid}`);

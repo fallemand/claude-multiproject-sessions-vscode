@@ -70,7 +70,7 @@ pnpm test      # unit (node:test) + integration (downloads VS Code once)
 pnpm package   # builds a .vsix
 ```
 
-Press F5 to launch the Extension Development Host. Flows across windows need the packaged extension installed. Design notes in [`PLAN.md`](PLAN.md).
+Press F5 to launch the Extension Development Host. Flows across windows need the packaged extension installed.
 
 ---
 

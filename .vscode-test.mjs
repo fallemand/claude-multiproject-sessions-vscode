@@ -23,7 +23,7 @@ writeFileSync(
 );
 
 export default defineConfig({
-  files: "out/test/integration/**/*.test.js",
+  files: "out/test/*.test.js",
   workspaceFolder: fixture.alpha,
   // Fresh settings and view state on every run.
   launchArgs: [`--user-data-dir=${userData}`],

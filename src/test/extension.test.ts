@@ -2,12 +2,12 @@ import * as assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import * as vscode from "vscode";
-import type { SessionsTree } from "../../tree";
-import type { Fixture } from "../fixture";
-import { sharedDir } from "../../windows";
+import type { SessionsView } from "../view";
+import type { Fixture } from "./fixture";
+import { sharedDir } from "../actions/windows";
 
 const fx: Fixture = JSON.parse(process.env.FIXTURE!);
-const extension = vscode.extensions.getExtension<{ tree: SessionsTree }>("fallemand.claude-multiproject-sessions")!;
+const extension = vscode.extensions.getExtension<{ tree: SessionsView }>("fallemand.claude-multiproject-sessions")!;
 
 const until = async <T>(get: () => T | undefined, what: string, timeout = 10_000) => {
   for (const start = Date.now(); Date.now() - start < timeout; await new Promise((r) => setTimeout(r, 100))) {
@@ -21,7 +21,7 @@ const setting = (key: string, value: unknown) =>
   vscode.workspace.getConfiguration().update(key, value, vscode.ConfigurationTarget.Global);
 
 suite("extension", () => {
-  let tree: SessionsTree;
+  let tree: SessionsView;
   const labels = (node?: unknown) => tree.getChildren(node as never).map((n) => tree.getTreeItem(n).label);
   const group = (label: string) => tree.getChildren().find((n) => tree.getTreeItem(n).label === label);
 
