@@ -1,16 +1,16 @@
 <p align="center"><img src="media/logo.png" width="112" alt=""></p>
 
-<h1 align="center">Multi-Project Sessions for Claude Code</h1>
+<h1 align="center">Multi-Repo Sessions for Claude Code</h1>
 
 <p align="center"><b>Every Claude Code session, from every project, in one list.</b><br>One click takes you to its worktree and resumes it.</p>
 
 <p align="center">
-  <a href="https://github.com/fallemand/claude-multiproject-sessions-vscode/actions/workflows/ci.yml"><img src="https://github.com/fallemand/claude-multiproject-sessions-vscode/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/fallemand/claude-multiproject-sessions-vscode?color=C15F3C" alt="License: MIT"></a>
-  <!-- Uncomment once published (shields.io retired its VS Marketplace badges):
-  <a href="https://marketplace.visualstudio.com/items?itemName=fallemand.claude-multiproject-sessions"><img src="https://vsmarketplacebadges.dev/version-short/fallemand.claude-multiproject-sessions.svg?color=C15F3C" alt="VS Marketplace"></a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=fallemand.claude-multiproject-sessions"><img src="https://vsmarketplacebadges.dev/installs-short/fallemand.claude-multiproject-sessions.svg?color=C15F3C" alt="Installs"></a>
-  <a href="https://open-vsx.org/extension/fallemand/claude-multiproject-sessions"><img src="https://img.shields.io/open-vsx/v/fallemand/claude-multiproject-sessions?label=Open%20VSX&color=C15F3C" alt="Open VSX"></a>
+  <a href="https://github.com/fallemand/claude-multirepo-sessions/actions/workflows/ci.yml"><img src="https://github.com/fallemand/claude-multirepo-sessions/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/fallemand/claude-multirepo-sessions?color=C15F3C" alt="License: MIT"></a>
+  <a href="https://open-vsx.org/extension/fallemand/claude-multirepo-sessions"><img src="https://img.shields.io/open-vsx/v/fallemand/claude-multirepo-sessions?label=Open%20VSX&color=C15F3C" alt="Open VSX"></a>
+  <!-- Uncomment once on the VS Marketplace (shields.io retired its badges):
+  <a href="https://marketplace.visualstudio.com/items?itemName=fallemand.claude-multirepo-sessions"><img src="https://vsmarketplacebadges.dev/version-short/fallemand.claude-multirepo-sessions.svg?color=C15F3C" alt="VS Marketplace"></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=fallemand.claude-multirepo-sessions"><img src="https://vsmarketplacebadges.dev/installs-short/fallemand.claude-multirepo-sessions.svg?color=C15F3C" alt="Installs"></a>
   -->
 </p>
 
@@ -32,18 +32,18 @@ This puts them all in one place and takes you straight to the code.
 ## 🚀 Getting started
 
 1. Install the extension.
-2. Open the Explorer and expand **Claude Sessions**.
+2. Open the Explorer and expand **Multi-Repo Sessions**.
 3. Click a session.
 
 Needs the [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI. Optional: the Claude Code VS Code extension (to resume in a Claude tab) and an authenticated [GitHub CLI](https://cli.github.com) (for PRs).
 
 ## ⚙️ Settings
 
-| Setting                          | Default    |                                                                                                   |
-| -------------------------------- | ---------- | ------------------------------------------------------------------------------------------------- |
-| `claudeSessions.openIn`          | `terminal` | Resume in a `terminal` (`claude --resume`) or a Claude tab (`editor`)                             |
-| `claudeSessions.maxProjects`     | `5`        | Projects shown before `N more projects`. The current one and those with live sessions always show |
-| `claudeSessions.maxPastSessions` | `10`       | Past sessions shown per project before `Load N more`                                              |
+| Setting                             | Default    |                                                                                                   |
+| ----------------------------------- | ---------- | ------------------------------------------------------------------------------------------------- |
+| `multirepoSessions.openIn`          | `terminal` | Resume in a `terminal` (`claude --resume`) or a Claude tab (`editor`)                             |
+| `multirepoSessions.maxProjects`     | `5`        | Projects shown before `N more projects`. The current one and those with live sessions always show |
+| `multirepoSessions.maxPastSessions` | `10`       | Past sessions shown per project before `Load N more`                                              |
 
 The section's toolbar filters live sessions, groups by status and picks a row layout. Right-click a session to open it in a new window, resume it the other way, open its PR or copy its ID.
 

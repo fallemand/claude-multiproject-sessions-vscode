@@ -8,7 +8,7 @@ import { log } from "../log";
 import { isRunning } from "../sessions/claude";
 
 // Shared by every window of this user, across profiles (unlike the extension's global storage, which is per profile).
-export const sharedDir = join(tmpdir(), `claude-multiproject-sessions-${userInfo().uid}`);
+export const sharedDir = join(tmpdir(), `claude-multirepo-sessions-${userInfo().uid}`);
 const windowsDir = join(sharedDir, "windows");
 
 // `pid` is the window's extension host: Claude tabs run as its children, terminal shells are listed in `terminals`.

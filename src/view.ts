@@ -27,7 +27,7 @@ const repoScheme = "claude-repo";
 const moreScheme = "claude-more";
 
 const setting = <T>(key: string, fallback: T) =>
-  vscode.workspace.getConfiguration("claudeSessions").get<T>(key, fallback);
+  vscode.workspace.getConfiguration("multirepoSessions").get<T>(key, fallback);
 
 export const where: Record<Entrypoint, string> = { cli: "terminal", vscode: "VS Code", desktop: "desktop app" };
 
@@ -159,7 +159,7 @@ const moreItem = (toggle: MoreToggle, expanded: boolean) =>
     // A resourceUri is the only way to color a label. Folder kind: themes without folder icons (Seti) draw none.
     resourceUri: vscode.Uri.from({ scheme: moreScheme, path: `/${encodeURIComponent(toggle.key)}` }),
     iconPath: vscode.ThemeIcon.Folder,
-    command: { command: "claudeSessions.toggleMore", title: "Show More", arguments: [toggle] },
+    command: { command: "multirepoSessions.toggleMore", title: "Show More", arguments: [toggle] },
   });
 
 // What the rows show; minute resolution so relative times still age.
@@ -184,7 +184,7 @@ const sessionItem = (s: Session, state: ViewState) => {
     description,
     tooltip: tooltip(s),
     contextValue: ["session", needsWorktree(s) && "needsWorktree", s.pr && "hasPr"].filter(Boolean).join("."),
-    command: { command: "claudeSessions.open", title: "Open Session", arguments: [s] },
+    command: { command: "multirepoSessions.open", title: "Open Session", arguments: [s] },
   });
 };
 
@@ -285,6 +285,6 @@ export class SessionsView implements vscode.TreeDataProvider<Node>, vscode.FileD
 
   private syncContext() {
     for (const [key, value] of Object.entries(this.state))
-      void vscode.commands.executeCommand("setContext", `claudeSessions.${key}`, value);
+      void vscode.commands.executeCommand("setContext", `multirepoSessions.${key}`, value);
   }
 }

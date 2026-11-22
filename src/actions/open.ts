@@ -50,7 +50,7 @@ const errorText = (e: unknown) =>
   (e as { stderr?: string }).stderr?.trim() || (e instanceof Error ? e.message : String(e));
 
 const defaultTarget = (): Target =>
-  vscode.workspace.getConfiguration("claudeSessions").get("openIn") === "editor" ? "editor" : "terminal";
+  vscode.workspace.getConfiguration("multirepoSessions").get("openIn") === "editor" ? "editor" : "terminal";
 
 const ask = (message: string, detail: string | undefined, ...items: (string | false | undefined)[]) =>
   vscode.window.showWarningMessage(message, { modal: true, detail }, ...items.filter((i): i is string => !!i));

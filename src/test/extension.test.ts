@@ -7,7 +7,7 @@ import type { Fixture } from "./fixture";
 import { sharedDir } from "../actions/windows";
 
 const fx: Fixture = JSON.parse(process.env.FIXTURE!);
-const extension = vscode.extensions.getExtension<{ tree: SessionsView }>("fallemand.claude-multiproject-sessions")!;
+const extension = vscode.extensions.getExtension<{ tree: SessionsView }>("fallemand.claude-multirepo-sessions")!;
 
 const until = async <T>(get: () => T | undefined, what: string, timeout = 10_000) => {
   for (const start = Date.now(); Date.now() - start < timeout; await new Promise((r) => setTimeout(r, 100))) {
@@ -27,7 +27,7 @@ suite("extension", () => {
 
   suiteSetup(async () => {
     tree = (await extension.activate()).tree;
-    await vscode.commands.executeCommand("claudeSessions.list.focus");
+    await vscode.commands.executeCommand("multirepoSessions.list.focus");
     await until(
       () =>
         tree.sessions.length &&
@@ -49,28 +49,28 @@ suite("extension", () => {
     assert.deepEqual(labels(), ["alpha", "beta", "Non-git folders"]);
     assert.deepEqual(labels(group("alpha")), ["Live in worktree", "1 past"]);
     const toggle = tree.getChildren(group("alpha") as never)[1];
-    await vscode.commands.executeCommand("claudeSessions.toggleMore", toggle);
+    await vscode.commands.executeCommand("multirepoSessions.toggleMore", toggle);
     assert.deepEqual(labels(group("alpha")), ["Live in worktree", "1 past", "Renamed alpha session"]);
     assert.equal(tree.getTreeItem(group("beta")!).collapsibleState, vscode.TreeItemCollapsibleState.Collapsed);
     assert.match(labels(group("beta"))[2], /^pasted pasted /);
 
-    await setting("claudeSessions.maxProjects", 1);
-    await setting("claudeSessions.maxPastSessions", 2);
+    await setting("multirepoSessions.maxProjects", 1);
+    await setting("multirepoSessions.maxPastSessions", 2);
     try {
       assert.deepEqual(labels(), ["alpha", "2 more projects"]);
       assert.deepEqual(labels(group("alpha")), ["Live in worktree", "1 past", "Renamed alpha session"]);
-      await vscode.commands.executeCommand("claudeSessions.toggleMore", tree.getChildren()[1]);
+      await vscode.commands.executeCommand("multirepoSessions.toggleMore", tree.getChildren()[1]);
       assert.deepEqual(labels(group("beta")), ["Beta AI title", "/review fix the beta bug", "Load 1 more"]);
     } finally {
-      await setting("claudeSessions.maxProjects", undefined);
-      await setting("claudeSessions.maxPastSessions", undefined);
+      await setting("multirepoSessions.maxProjects", undefined);
+      await setting("multirepoSessions.maxPastSessions", undefined);
     }
   });
 
   test("resumes a past session of this window's folder in a terminal here", async () => {
     // Terminals run /bin/sh with the stub `claude` first on PATH (see .vscode-test.mjs).
     const session = tree.sessions.find((s) => s.id === "alpha-past");
-    await vscode.commands.executeCommand("claudeSessions.resumeInTerminal", session);
+    await vscode.commands.executeCommand("multirepoSessions.resumeInTerminal", session);
 
     const terminal = vscode.window.terminals.find((t) => t.name === "Renamed alpha session");
     assert.equal((terminal?.creationOptions as vscode.TerminalOptions | undefined)?.cwd, fx.alpha);

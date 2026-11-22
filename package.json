@@ -1,8 +1,7 @@
 {
-  "name": "claude-multiproject-sessions",
-  "displayName": "Multi-Project Sessions for Claude Code",
+  "name": "claude-multirepo-sessions",
+  "displayName": "Multi-Repo Sessions for Claude Code",
   "version": "0.0.1",
-  "private": true,
   "description": "All your Claude Code sessions across projects in one list. One click opens a session's worktree in VS Code and resumes it.",
   "categories": [
     "AI",
@@ -17,14 +16,14 @@
     "sessions",
     "worktree"
   ],
-  "homepage": "https://github.com/fallemand/claude-multiproject-sessions-vscode#readme",
+  "homepage": "https://github.com/fallemand/claude-multirepo-sessions#readme",
   "bugs": {
-    "url": "https://github.com/fallemand/claude-multiproject-sessions-vscode/issues"
+    "url": "https://github.com/fallemand/claude-multirepo-sessions/issues"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fallemand/claude-multiproject-sessions-vscode"
+    "url": "https://github.com/fallemand/claude-multirepo-sessions"
   },
   "publisher": "fallemand",
   "main": "./dist/extension.js",
@@ -44,14 +43,15 @@
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^4.1.1",
+    "ovsx": "^1.4.0",
     "typescript": "^5.9.0",
     "vite-plus": "1.7.0"
   },
   "contributes": {
     "configuration": {
-      "title": "Claude Sessions",
+      "title": "Multi-Repo Sessions",
       "properties": {
-        "claudeSessions.openIn": {
+        "multirepoSessions.openIn": {
           "type": "string",
           "enum": [
             "editor",
@@ -64,13 +64,13 @@
           "default": "terminal",
           "description": "Where clicking a session resumes it."
         },
-        "claudeSessions.maxProjects": {
+        "multirepoSessions.maxProjects": {
           "type": "number",
           "default": 5,
           "minimum": 1,
           "description": "Projects listed before the rest fold into a \"N more projects\" row. The current project and projects with live sessions are always listed."
         },
-        "claudeSessions.maxPastSessions": {
+        "multirepoSessions.maxPastSessions": {
           "type": "number",
           "default": 10,
           "minimum": 1,
@@ -81,80 +81,80 @@
     "views": {
       "explorer": [
         {
-          "id": "claudeSessions.list",
-          "name": "Claude Sessions",
+          "id": "multirepoSessions.list",
+          "name": "Multi-Repo Sessions",
           "icon": "media/icon.svg"
         }
       ]
     },
     "commands": [
       {
-        "command": "claudeSessions.refresh",
+        "command": "multirepoSessions.refresh",
         "title": "Refresh",
         "icon": "$(refresh)"
       },
       {
-        "command": "claudeSessions.showLiveOnly",
+        "command": "multirepoSessions.showLiveOnly",
         "title": "Show Live Sessions Only",
         "icon": "$(filter)"
       },
       {
-        "command": "claudeSessions.showAll",
+        "command": "multirepoSessions.showAll",
         "title": "Show All Sessions",
         "icon": "$(filter-filled)"
       },
       {
-        "command": "claudeSessions.groupByStatus",
+        "command": "multirepoSessions.groupByStatus",
         "title": "Group by Status",
         "icon": "$(pulse)"
       },
       {
-        "command": "claudeSessions.groupByRepo",
+        "command": "multirepoSessions.groupByRepo",
         "title": "Group by Repository",
         "icon": "$(repo)"
       },
       {
-        "command": "claudeSessions.pickLayout",
+        "command": "multirepoSessions.pickLayout",
         "title": "Row Layout…"
       },
       {
-        "command": "claudeSessions.toggleMore",
+        "command": "multirepoSessions.toggleMore",
         "title": "Show More"
       },
       {
-        "command": "claudeSessions.open",
+        "command": "multirepoSessions.open",
         "title": "Open Session",
         "icon": "$(go-to-file)"
       },
       {
-        "command": "claudeSessions.openInNewWindow",
+        "command": "multirepoSessions.openInNewWindow",
         "title": "Open in New Window",
         "icon": "$(empty-window)"
       },
       {
-        "command": "claudeSessions.resumeInEditor",
+        "command": "multirepoSessions.resumeInEditor",
         "title": "Resume in Claude Tab"
       },
       {
-        "command": "claudeSessions.resumeInTerminal",
+        "command": "multirepoSessions.resumeInTerminal",
         "title": "Resume in Terminal",
         "icon": "$(terminal)"
       },
       {
-        "command": "claudeSessions.copyId",
+        "command": "multirepoSessions.copyId",
         "title": "Copy Session ID"
       },
       {
-        "command": "claudeSessions.revealTranscript",
+        "command": "multirepoSessions.revealTranscript",
         "title": "Reveal Transcript"
       },
       {
-        "command": "claudeSessions.openPr",
+        "command": "multirepoSessions.openPr",
         "title": "Open Pull Request",
         "icon": "$(git-pull-request)"
       },
       {
-        "command": "claudeSessions.createWorktree",
+        "command": "multirepoSessions.createWorktree",
         "title": "Create Worktree for Branch",
         "icon": "$(git-branch)"
       }
@@ -162,127 +162,127 @@
     "menus": {
       "view/title": [
         {
-          "command": "claudeSessions.showLiveOnly",
-          "when": "view == claudeSessions.list && claudeSessions.filter == all",
+          "command": "multirepoSessions.showLiveOnly",
+          "when": "view == multirepoSessions.list && multirepoSessions.filter == all",
           "group": "navigation@1"
         },
         {
-          "command": "claudeSessions.showAll",
-          "when": "view == claudeSessions.list && claudeSessions.filter == live",
+          "command": "multirepoSessions.showAll",
+          "when": "view == multirepoSessions.list && multirepoSessions.filter == live",
           "group": "navigation@1"
         },
         {
-          "command": "claudeSessions.groupByStatus",
-          "when": "view == claudeSessions.list && claudeSessions.groupBy == repo",
+          "command": "multirepoSessions.groupByStatus",
+          "when": "view == multirepoSessions.list && multirepoSessions.groupBy == repo",
           "group": "navigation@2"
         },
         {
-          "command": "claudeSessions.groupByRepo",
-          "when": "view == claudeSessions.list && claudeSessions.groupBy == status",
+          "command": "multirepoSessions.groupByRepo",
+          "when": "view == multirepoSessions.list && multirepoSessions.groupBy == status",
           "group": "navigation@2"
         },
         {
-          "command": "claudeSessions.refresh",
-          "when": "view == claudeSessions.list",
+          "command": "multirepoSessions.refresh",
+          "when": "view == multirepoSessions.list",
           "group": "navigation@3"
         },
         {
-          "command": "claudeSessions.pickLayout",
-          "when": "view == claudeSessions.list",
+          "command": "multirepoSessions.pickLayout",
+          "when": "view == multirepoSessions.list",
           "group": "1_layout"
         }
       ],
       "view/item/context": [
         {
-          "command": "claudeSessions.openInNewWindow",
-          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "command": "multirepoSessions.openInNewWindow",
+          "when": "view == multirepoSessions.list && viewItem =~ /^session/",
           "group": "inline"
         },
         {
-          "command": "claudeSessions.open",
-          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "command": "multirepoSessions.open",
+          "when": "view == multirepoSessions.list && viewItem =~ /^session/",
           "group": "1_open@1"
         },
         {
-          "command": "claudeSessions.openInNewWindow",
-          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "command": "multirepoSessions.openInNewWindow",
+          "when": "view == multirepoSessions.list && viewItem =~ /^session/",
           "group": "1_open@2"
         },
         {
-          "command": "claudeSessions.resumeInTerminal",
-          "when": "view == claudeSessions.list && viewItem =~ /^session/ && config.claudeSessions.openIn != terminal",
+          "command": "multirepoSessions.resumeInTerminal",
+          "when": "view == multirepoSessions.list && viewItem =~ /^session/ && config.multirepoSessions.openIn != terminal",
           "group": "1_open@3"
         },
         {
-          "command": "claudeSessions.resumeInEditor",
-          "when": "view == claudeSessions.list && viewItem =~ /^session/ && config.claudeSessions.openIn == terminal",
+          "command": "multirepoSessions.resumeInEditor",
+          "when": "view == multirepoSessions.list && viewItem =~ /^session/ && config.multirepoSessions.openIn == terminal",
           "group": "1_open@3"
         },
         {
-          "command": "claudeSessions.openPr",
-          "when": "view == claudeSessions.list && viewItem =~ /hasPr/",
+          "command": "multirepoSessions.openPr",
+          "when": "view == multirepoSessions.list && viewItem =~ /hasPr/",
           "group": "2_git@1"
         },
         {
-          "command": "claudeSessions.createWorktree",
-          "when": "view == claudeSessions.list && viewItem =~ /needsWorktree/",
+          "command": "multirepoSessions.createWorktree",
+          "when": "view == multirepoSessions.list && viewItem =~ /needsWorktree/",
           "group": "2_git@2"
         },
         {
-          "command": "claudeSessions.copyId",
-          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "command": "multirepoSessions.copyId",
+          "when": "view == multirepoSessions.list && viewItem =~ /^session/",
           "group": "3_info@1"
         },
         {
-          "command": "claudeSessions.revealTranscript",
-          "when": "view == claudeSessions.list && viewItem =~ /^session/",
+          "command": "multirepoSessions.revealTranscript",
+          "when": "view == multirepoSessions.list && viewItem =~ /^session/",
           "group": "3_info@2"
         }
       ],
       "commandPalette": [
         {
-          "command": "claudeSessions.toggleMore",
+          "command": "multirepoSessions.toggleMore",
           "when": "false"
         },
         {
-          "command": "claudeSessions.open",
+          "command": "multirepoSessions.open",
           "when": "false"
         },
         {
-          "command": "claudeSessions.openInNewWindow",
+          "command": "multirepoSessions.openInNewWindow",
           "when": "false"
         },
         {
-          "command": "claudeSessions.resumeInTerminal",
+          "command": "multirepoSessions.resumeInTerminal",
           "when": "false"
         },
         {
-          "command": "claudeSessions.resumeInEditor",
+          "command": "multirepoSessions.resumeInEditor",
           "when": "false"
         },
         {
-          "command": "claudeSessions.copyId",
+          "command": "multirepoSessions.copyId",
           "when": "false"
         },
         {
-          "command": "claudeSessions.revealTranscript",
+          "command": "multirepoSessions.revealTranscript",
           "when": "false"
         },
         {
-          "command": "claudeSessions.openPr",
+          "command": "multirepoSessions.openPr",
           "when": "false"
         },
         {
-          "command": "claudeSessions.createWorktree",
+          "command": "multirepoSessions.createWorktree",
           "when": "false"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "claudeSessions.list",
-        "contents": "No live Claude sessions.\n[Show All Sessions](command:claudeSessions.showAll)",
-        "when": "claudeSessions.filter == live"
+        "view": "multirepoSessions.list",
+        "contents": "No live Claude sessions.\n[Show All Sessions](command:multirepoSessions.showAll)",
+        "when": "multirepoSessions.filter == live"
       }
     ]
   },
@@ -294,6 +294,7 @@
     "color": "#C15F3C",
     "theme": "dark"
   },
+  "preview": true,
   "engines": {
     "vscode": "^1.95.0"
   },

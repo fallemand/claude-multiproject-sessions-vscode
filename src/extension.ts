@@ -21,7 +21,10 @@ const currentRepos = async () => {
 
 export const activate = (context: vscode.ExtensionContext) => {
   const tree = new SessionsView(context.globalState, []);
-  const view = vscode.window.createTreeView("claudeSessions.list", { treeDataProvider: tree, showCollapseAll: true });
+  const view = vscode.window.createTreeView("multirepoSessions.list", {
+    treeDataProvider: tree,
+    showCollapseAll: true,
+  });
   view.message = "Loading sessions…";
 
   const updateBadge = () => {
@@ -73,7 +76,7 @@ export const activate = (context: vscode.ExtensionContext) => {
     tree.onDidChangeTreeData(updateBadge),
     new vscode.Disposable(watchClaudeSessions(() => void refresh(), undefined, watchDelay)),
     vscode.workspace.onDidChangeWorkspaceFolders(() => void updateCurrentRepos()),
-    vscode.workspace.onDidChangeConfiguration((e) => e.affectsConfiguration("claudeSessions") && tree.rerender()),
+    vscode.workspace.onDidChangeConfiguration((e) => e.affectsConfiguration("multirepoSessions") && tree.rerender()),
     new vscode.Disposable(() => clearInterval(poll)),
     vscode.window.onDidChangeWindowState(({ focused }) => focused && void consumeHandoff()),
     ...registerCommands(tree, refresh),
