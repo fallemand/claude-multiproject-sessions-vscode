@@ -13,7 +13,7 @@ Goal: a sidebar listing Claude Code sessions grouped by project. Clicking a sess
 Decided: native `TreeView` (not a webview) unless we hit something it can't show. Plain `tsc`, no bundler; add Vite+/tsdown only when packaging a `.vsix` with runtime deps. Tests: `node:test` on tsc output for unit tests (no extra runner), `@vscode/test-cli` for integration; see AGENTS.md "Tests".
 
 ## Data sources (verified locally, Nov 2026, Claude Code 2.1.3xx)
-None of these are public APIs; keep all parsing in `src/sources/` so format changes stay contained.
+None of these are public APIs; keep all parsing in `src/sessions/` so format changes stay contained.
 
 - **Live sessions**: `~/.claude/sessions/<pid>.json`
   - `pid`, `sessionId`, `cwd`, `name`, `status` (`busy` | `idle`), `entrypoint` (e.g. `claude-desktop`), `kind`, `startedAt`, `updatedAt`, `version`
@@ -69,10 +69,10 @@ Principle: the default view stays minimal (repo icon, then name + time); everyth
 UI settled (see above). All code is in place and type-checks; it has not been exercised end to end in VS Code yet. Public repo: https://github.com/fallemand/claude-multiproject-sessions-vscode (MIT).
 
 ### Done
-1. `src/sources/claude.ts`: live + history sessions from `~/.claude` (head/tail reads, see "Data sources"), throttled watcher.
-2. `src/sources/git.ts` (repo, worktree, current branch + existing branches, language) and `src/sources/github.ts` (PRs via `gh`, 5 min cache).
-3. `src/open.ts`: click flow (worktree prompt, live-elsewhere warning, focus/open window, file handoff, resume in Claude tab or terminal). Steps are logged to Output → "Claude Sessions".
-4. Integration in `src/sources/index.ts` + `src/extension.ts`: PRs in a second pass (~3 s cold); refresh on watcher events (≤ 1/s) + every 30 s (dead pids leave no file event); one refresh at a time; render skipped when nothing visible changed; hidden views do no work and refresh when shown; `onStartupFinished` activation so handoffs work in any window. Mocks removed.
+1. `src/sessions/claude.ts`: live + history sessions from `~/.claude` (head/tail reads, see "Data sources"), throttled watcher.
+2. `src/sessions/git.ts`: repo, worktree, current branch + existing branches, language, PRs via `gh` (5 min cache).
+3. `src/actions/open.ts`: click flow (worktree prompt, live-elsewhere warning, focus/open window, file handoff, resume in Claude tab or terminal). Steps are logged to Output → "Claude Sessions".
+4. Integration in `src/extension.ts`: PRs in a second pass (~3 s cold); refresh on watcher events (≤ 1/s) + every 30 s (dead pids leave no file event); one refresh at a time; render skipped when nothing visible changed; hidden views do no work and refresh when shown; `onStartupFinished` activation so handoffs work in any window. Mocks removed.
 5. Independent review, all fixes applied: deleted sibling worktrees resolve their repo from `startCwd`; "needs worktree" only when the branch still exists (593 → 64 sessions); stale worktrees pruned before reuse; current project resolved through git so worktree windows count; failed repo lookups retried after 60 s; checkout offered with untracked files.
 6. Limits: `claudeSessions.maxProjects` (5) folds older projects into `N more projects ▾`; `claudeSessions.maxPastSessions` (10) pages past sessions with `Load N more`.
 7. Branding: name, ids, logo, view icon, README (badges, Options, image slots), CI workflow (`.github/workflows/ci.yml`: type-check, unit + integration tests under xvfb), `packageManager` pinned.

@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { Session } from "./model";
+import { Session } from "../sessions/model";
 import { openInWorktree, openPr, openSession } from "./open";
-import { transcriptPath } from "./sources";
-import { MoreToggle, SessionsTree, ViewState } from "./tree";
+import { transcriptPath } from "../sessions/claude";
+import { MoreToggle, SessionsView, ViewState } from "../view";
 
 const layouts: { label: string; detail: string; value: ViewState["layout"] }[] = [
   { label: "Compact", detail: "Name · time", value: "compact" },
@@ -11,7 +11,7 @@ const layouts: { label: string; detail: string; value: ViewState["layout"] }[] =
 ];
 
 export const registerCommands = (
-  tree: SessionsTree,
+  tree: SessionsView,
   refresh: () => Promise<void>,
 ): vscode.Disposable[] => {
   const commands = {

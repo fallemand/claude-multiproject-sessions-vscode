@@ -2,7 +2,7 @@ import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
-import { Repo } from "../model";
+import { ClaudeSession, Pr, PrState, Repo, Session } from "./model";
 
 export type RepoInfo = { repo?: Repo; worktree: boolean };
 
@@ -12,7 +12,7 @@ const branchTtl = 10_000;
 // Folders that aren't (or no longer resolve to) a repo are retried after this, e.g. after a git timeout.
 const retryTtl = 60_000;
 
-export const run = (cmd: string, args: string[], cwd?: string, timeout = 5_000) =>
+const run = (cmd: string, args: string[], cwd?: string, timeout = 5_000) =>
   new Promise<string | undefined>((resolve) =>
     execFile(cmd, args, { cwd, timeout, windowsHide: true }, (error, stdout) => resolve(error ? undefined : stdout.trim())),
   );
@@ -113,4 +113,59 @@ export const resolveRepo = async (cwd: string): Promise<RepoInfo> => {
   } catch {
     return { worktree: false };
   }
+};
+
+type GhPr = { number: number; title: string; state: "OPEN" | "MERGED" | "CLOSED"; isDraft: boolean; url: string; headRefName: string };
+
+const prTtl = 5 * 60_000;
+const prFields = "number,title,state,isDraft,url,headRefName";
+
+const toState = ({ state, isDraft }: GhPr): PrState =>
+  state === "OPEN" ? (isDraft ? "draft" : "open") : state === "MERGED" ? "merged" : "closed";
+
+const isOpen = (pr: Pr) => pr.state === "open" || pr.state === "draft";
+
+// Several PRs on one branch: open/draft wins, else the most recent.
+const better = (a: Pr, b: Pr) => (isOpen(a) !== isOpen(b) ? isOpen(a) : a.number > b.number);
+
+const parsePrs = (out?: string) => {
+  const prs = new Map<string, Pr>();
+  try {
+    for (const gh of JSON.parse(out ?? "[]") as GhPr[]) {
+      const pr: Pr = { number: gh.number, title: gh.title, state: toState(gh), url: gh.url };
+      const current = prs.get(gh.headRefName);
+      if (!current || better(pr, current)) prs.set(gh.headRefName, pr);
+    }
+  } catch {}
+  return prs;
+};
+
+const prCache = new Map<string, { at: number; prs: Promise<Map<string, Pr>> }>();
+
+// Failures (no gh, not authenticated, no GitHub remote) yield an empty map, cached like a success.
+export const loadPrs = (repoPath: string): Promise<Map<string, Pr>> => {
+  const hit = prCache.get(repoPath);
+  if (hit && Date.now() - hit.at < prTtl) return hit.prs;
+  const prs = run("gh", ["pr", "list", "--state", "all", "--author", "@me", "--json", prFields, "--limit", "100"], repoPath, 20_000).then(parsePrs);
+  prCache.set(repoPath, { at: Date.now(), prs });
+  return prs;
+};
+
+const withRepo = async (s: ClaudeSession): Promise<Session> => {
+  const info = await resolveRepo(s.cwd);
+  // A deleted worktree outside the repo (e.g. a sibling folder): the session started in the repo it belongs to.
+  if (!info.repo && s.startCwd !== s.cwd && !existsSync(s.cwd)) {
+    const { repo } = await resolveRepo(s.startCwd);
+    if (repo) return { ...s, repo, worktree: true };
+  }
+  return { ...s, ...info };
+};
+
+export const withRepos = (sessions: ClaudeSession[]): Promise<Session[]> => Promise.all(sessions.map(withRepo));
+
+// Separate from withRepos: `gh` takes ~1s per repo cold, so the tree renders first and PRs fill in after.
+export const withPrs = async (sessions: Session[]): Promise<Session[]> => {
+  const paths = [...new Set(sessions.flatMap((s) => (s.repo ? [s.repo.path] : [])))];
+  const prs = new Map(await Promise.all(paths.map(async (path) => [path, await loadPrs(path)] as const)));
+  return sessions.map((s) => ({ ...s, pr: s.repo && s.branch ? prs.get(s.repo.path)?.get(s.branch) : undefined }));
 };

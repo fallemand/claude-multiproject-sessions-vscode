@@ -2,7 +2,7 @@ import { watch } from "node:fs";
 import { open, readdir, readFile, stat } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { ClaudeSession, Entrypoint } from "../model";
+import { ClaudeSession, Entrypoint } from "./model";
 
 // Formats verified against Claude Code 2.1.3xx, see PLAN.md "Data sources".
 

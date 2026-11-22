@@ -4,9 +4,9 @@ import { homedir } from "node:os";
 import { join, sep } from "node:path";
 import { promisify } from "node:util";
 import * as vscode from "vscode";
-import { log } from "./log";
-import { isLive, needsWorktree, Session } from "./model";
-import { where } from "./tree";
+import { log } from "../log";
+import { isLive, needsWorktree, Session } from "../sessions/model";
+import { where } from "../view";
 import { ancestors, otherWindows, sharedDir, thisWindow, WindowInfo } from "./windows";
 
 type Target = "editor" | "terminal";
