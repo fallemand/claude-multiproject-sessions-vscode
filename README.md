@@ -66,6 +66,7 @@ Everything stays on your machine. It reads Claude Code's files in `~/.claude` wi
 ```sh
 pnpm install
 pnpm type-check
+pnpm test      # unit (node:test) + integration (downloads VS Code once)
 pnpm package   # builds a .vsix
 ```
 

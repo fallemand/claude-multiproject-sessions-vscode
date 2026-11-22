@@ -75,4 +75,6 @@ export const activate = (context: vscode.ExtensionContext) => {
     vscode.window.onDidChangeWindowState(({ focused }) => focused && void consumeHandoff()),
     ...registerCommands(tree, refresh),
   );
+  // Integration tests read the tree directly.
+  return context.extensionMode === vscode.ExtensionMode.Test ? { tree } : undefined;
 };
