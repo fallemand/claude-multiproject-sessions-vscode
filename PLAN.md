@@ -66,7 +66,7 @@ Principle: the default view stays minimal (repo icon, then name + time); everyth
 - View state (filter, groupBy, layout) persisted in `globalState`, exposed as `claudeSessions.*` context keys for `when` clauses.
 
 ## Build phase
-UI settled (see above). All code is in place and type-checks; it has not been exercised end to end in VS Code yet. Nothing is committed (the repo has no commits and no remote).
+UI settled (see above). All code is in place and type-checks; it has not been exercised end to end in VS Code yet. Public repo: https://github.com/fallemand/claude-multiproject-sessions-vscode (MIT).
 
 ### Done
 1. `src/sources/claude.ts`: live + history sessions from `~/.claude` (head/tail reads, see "Data sources"), throttled watcher.
@@ -87,8 +87,8 @@ UI settled (see above). All code is in place and type-checks; it has not been ex
 - README media: `media/demo.gif` done (from a 39 s screen recording: `ffmpeg` at 1.5× speed, 10 fps, 960 px, 128-colour palette → 2.4 MB). It shows work session names (GYG repos, a Slack channel id); re-record with neutral projects before the repo goes public. Relative README images are served from GitHub by vsce, so the GIF stays out of the `.vsix`.
 
 ### Open decisions
-- License (MIT suggested) + `LICENSE` file; the README license badge depends on it.
-- Create the GitHub repo `fallemand/claude-multiproject-sessions-vscode`, first commit, push.
+- Repo topics (`claude-code`, `claude`, `vscode-extension`, `git-worktree`, `ai-agents`): adding them hit a GitHub API 403 on 2026-11-22; retry with `gh repo edit fallemand/claude-multiproject-sessions-vscode --add-topic ...`.
+- Publishing to the Marketplace (publisher `fallemand` needs an Azure DevOps PAT for `vsce publish`) and Open VSX (`ovsx publish`).
 
 ### Known limits
 - A crashed Claude process whose pid gets reused shows its session as live (live json has `procStart`, but its format/timezone differs from `ps -o lstart`).
