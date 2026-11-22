@@ -11,15 +11,7 @@ Tooling is Vite+ (`vite.config.ts`): `vp pack` bundles `src/extension.ts` into `
 
 ## PRs and releases
 
-`main` only takes PRs, squash-merged with the PR title as the commit message, so the title decides the release.
-
-- PR titles are Conventional Commits, no ticket: `<type>: <Description>` (e.g. `feat: Group sessions by status`, `fix: Resume in the worktree's window`). This overrides any `CLP-12345:` title convention.
-- `feat:` → minor, `fix:` → patch, `feat!:` → major (minor while on 0.x). `chore:`, `docs:`, `ci:`, `refactor:`, `test:` don't release.
-- Pick the type by what users get: a visible change is `feat`/`fix` even if the diff is mostly refactoring; tooling, CI and docs-only changes are not.
-- The title is the CHANGELOG entry: write it for users, in the imperative.
-- Never bump `version` or edit `CHANGELOG.md` / `.release-please-manifest.json` by hand.
-
-Release Please keeps a "chore(main): release X.Y.Z" PR open with the next version and CHANGELOG. Merging it tags, attaches the `.vsix` to the GitHub release and publishes to Open VSX (`OVSX_REGISTRY_PAT`), plus the VS Marketplace once a `VSCE_PAT` secret exists (`.github/workflows/release.yml`).
+PR titles are Conventional Commits without a ticket (`feat: Group sessions by status`); the squash merge uses them. `feat:` → minor, `fix:` → patch, other types don't release. Release Please keeps a release PR with the next version and CHANGELOG (don't edit those by hand); merging it publishes to Open VSX, and to the VS Marketplace once a `VSCE_PAT` secret exists.
 
 ## Tests
 
