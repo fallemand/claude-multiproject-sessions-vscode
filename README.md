@@ -8,6 +8,7 @@
   <a href="https://github.com/fallemand/claude-multirepo-sessions/actions/workflows/ci.yml"><img src="https://github.com/fallemand/claude-multirepo-sessions/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/fallemand/claude-multirepo-sessions?color=C15F3C" alt="License: MIT"></a>
   <a href="https://open-vsx.org/extension/fallemand/claude-multirepo-sessions"><img src="https://img.shields.io/open-vsx/v/fallemand/claude-multirepo-sessions?label=Open%20VSX&color=C15F3C" alt="Open VSX"></a>
+  <a href="https://open-vsx.org/extension/fallemand/claude-multirepo-sessions"><img src="https://img.shields.io/open-vsx/dt/fallemand/claude-multirepo-sessions?label=Downloads&color=C15F3C" alt="Open VSX downloads"></a>
   <!-- Uncomment once on the VS Marketplace (shields.io retired its badges):
   <a href="https://marketplace.visualstudio.com/items?itemName=fallemand.claude-multirepo-sessions"><img src="https://vsmarketplacebadges.dev/version-short/fallemand.claude-multirepo-sessions.svg?color=C15F3C" alt="VS Marketplace"></a>
   <a href="https://marketplace.visualstudio.com/items?itemName=fallemand.claude-multirepo-sessions"><img src="https://vsmarketplacebadges.dev/installs-short/fallemand.claude-multirepo-sessions.svg?color=C15F3C" alt="Installs"></a>
