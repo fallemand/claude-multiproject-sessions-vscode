@@ -63,7 +63,10 @@ const promptText = (content: unknown) => {
     typeof content === "string"
       ? content
       : Array.isArray(content)
-        ? content.filter((c) => c?.type === "text").map((c) => c.text).join(" ")
+        ? content
+            .filter((c) => c?.type === "text")
+            .map((c) => c.text)
+            .join(" ")
         : "";
   const s = raw.trim();
   if (!s || /^(<(local-command|task-notification|system-reminder|bash-)|\[Request interrupted)/.test(s)) return;
@@ -76,7 +79,12 @@ const promptText = (content: unknown) => {
 };
 
 const lastText = (content: unknown) =>
-  Array.isArray(content) ? content.filter((c) => c?.type === "text" && c.text?.trim()).map((c) => c.text).join(" ") : "";
+  Array.isArray(content)
+    ? content
+        .filter((c) => c?.type === "text" && c.text?.trim())
+        .map((c) => c.text)
+        .join(" ")
+    : "";
 
 const bytes = (s: string) => Buffer.from(s);
 const typeFirst = bytes('{"type":"');
@@ -255,7 +263,10 @@ const toSession = (t: Transcript | undefined, live: Live | undefined): ClaudeSes
   const liveName = live?.nameSource === "derived" ? undefined : live?.name;
   return {
     id: (live?.sessionId ?? t?.id)!,
-    name: oneLine(liveName || t?.customTitle || t?.aiTitle || t?.agentName || t?.prompt || live?.name || "Untitled", 120),
+    name: oneLine(
+      liveName || t?.customTitle || t?.aiTitle || t?.agentName || t?.prompt || live?.name || "Untitled",
+      120,
+    ),
     cwd: (live?.cwd ?? t?.cwd)!,
     startCwd: (t?.startCwd ?? live?.cwd ?? t?.cwd)!,
     branch: t?.branch,
@@ -295,7 +306,11 @@ export const watchClaudeSessions = (onChange: () => void, claudeDir = defaultDir
   ];
   const watchers = targets.flatMap(({ dir, recursive, relevant }) => {
     try {
-      const w = watch(join(claudeDir, dir), { recursive, persistent: false }, (_, f) => (!f || relevant(f)) && changed());
+      const w = watch(
+        join(claudeDir, dir),
+        { recursive, persistent: false },
+        (_, f) => (!f || relevant(f)) && changed(),
+      );
       w.on("error", () => w.close());
       return [w];
     } catch {

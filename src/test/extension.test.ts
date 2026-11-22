@@ -22,19 +22,28 @@ const setting = (key: string, value: unknown) =>
 
 suite("extension", () => {
   let tree: SessionsView;
-  const labels = (node?: unknown) => tree.getChildren(node as never).map((n) => tree.getTreeItem(n).label);
+  const labels = (node?: unknown) => tree.getChildren(node as never).map((n) => tree.getTreeItem(n).label as string);
   const group = (label: string) => tree.getChildren().find((n) => tree.getTreeItem(n).label === label);
 
   suiteSetup(async () => {
     tree = (await extension.activate()).tree;
     await vscode.commands.executeCommand("claudeSessions.list.focus");
-    await until(() => tree.sessions.length && tree.getChildren()[0] && tree.getTreeItem(tree.getChildren()[0]).collapsibleState === vscode.TreeItemCollapsibleState.Expanded, "sessions");
+    await until(
+      () =>
+        tree.sessions.length &&
+        tree.getChildren()[0] &&
+        tree.getTreeItem(tree.getChildren()[0]).collapsibleState === vscode.TreeItemCollapsibleState.Expanded,
+      "sessions",
+    );
   });
 
   test("lists the fixture sessions by repo and folds them per settings", async () => {
     const contributed: { command: string }[] = extension.packageJSON.contributes.commands;
     const registered = await vscode.commands.getCommands(true);
-    assert.deepEqual(contributed.filter(({ command }) => !registered.includes(command)), []);
+    assert.deepEqual(
+      contributed.filter(({ command }) => !registered.includes(command)),
+      [],
+    );
 
     // Current project (the workspace folder) first and expanded; the live session first, past ones behind a toggle.
     assert.deepEqual(labels(), ["alpha", "beta", "Non-git folders"]);
@@ -43,7 +52,7 @@ suite("extension", () => {
     await vscode.commands.executeCommand("claudeSessions.toggleMore", toggle);
     assert.deepEqual(labels(group("alpha")), ["Live in worktree", "1 past", "Renamed alpha session"]);
     assert.equal(tree.getTreeItem(group("beta")!).collapsibleState, vscode.TreeItemCollapsibleState.Collapsed);
-    assert.match(String(labels(group("beta"))[2]), /^pasted pasted /);
+    assert.match(labels(group("beta"))[2], /^pasted pasted /);
 
     await setting("claudeSessions.maxProjects", 1);
     await setting("claudeSessions.maxPastSessions", 2);
@@ -66,7 +75,10 @@ suite("extension", () => {
     const terminal = vscode.window.terminals.find((t) => t.name === "Renamed alpha session");
     assert.equal((terminal?.creationOptions as vscode.TerminalOptions | undefined)?.cwd, fx.alpha);
     const args = join(fx.root, "claude-args");
-    assert.equal(await until(() => existsSync(args) && readFileSync(args, "utf8").trim(), "claude to run"), "--resume alpha-past");
+    assert.equal(
+      await until(() => existsSync(args) && readFileSync(args, "utf8").trim(), "claude to run"),
+      "--resume alpha-past",
+    );
     // Resumed here, so nothing was handed off to another window.
     assert.equal(existsSync(join(sharedDir, "handoff.json")), false);
   });

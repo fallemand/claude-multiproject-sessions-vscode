@@ -17,8 +17,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm type-check
-      - run: pnpm test:unit
+      - run: pnpm check
+      - run: pnpm exec vp test
       # Cache the VS Code download per release; a new stable gets a new key.
       - id: vscode
         run: echo "version=$(curl -fsSL https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]')" >> "$GITHUB_OUTPUT"

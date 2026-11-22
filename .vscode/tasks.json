@@ -6,7 +6,14 @@
       "type": "npm",
       "script": "watch",
       "isBackground": true,
-      "problemMatcher": "$tsc-watch",
+      "problemMatcher": {
+        "pattern": { "regexp": "^\\s*\\[(ERROR)\\] (.*)$", "severity": 1, "message": 2 },
+        "background": {
+          "activatesOnStart": true,
+          "beginsPattern": "Build start|rebuilding",
+          "endsPattern": "Rebuilt in|Build complete|Build failed|\\[ERROR\\]"
+        }
+      },
       "presentation": { "reveal": "never" },
       "group": { "kind": "build", "isDefault": true }
     }

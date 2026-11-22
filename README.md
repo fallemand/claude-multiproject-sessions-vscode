@@ -39,11 +39,11 @@ Needs the [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI. Opt
 
 ## ⚙️ Settings
 
-| Setting | Default | |
-| --- | --- | --- |
-| `claudeSessions.openIn` | `terminal` | Resume in a `terminal` (`claude --resume`) or a Claude tab (`editor`) |
-| `claudeSessions.maxProjects` | `5` | Projects shown before `N more projects`. The current one and those with live sessions always show |
-| `claudeSessions.maxPastSessions` | `10` | Past sessions shown per project before `Load N more` |
+| Setting                          | Default    |                                                                                                   |
+| -------------------------------- | ---------- | ------------------------------------------------------------------------------------------------- |
+| `claudeSessions.openIn`          | `terminal` | Resume in a `terminal` (`claude --resume`) or a Claude tab (`editor`)                             |
+| `claudeSessions.maxProjects`     | `5`        | Projects shown before `N more projects`. The current one and those with live sessions always show |
+| `claudeSessions.maxPastSessions` | `10`       | Past sessions shown per project before `Load N more`                                              |
 
 The section's toolbar filters live sessions, groups by status and picks a row layout. Right-click a session to open it in a new window, resume it the other way, open its PR or copy its ID.
 
@@ -65,8 +65,8 @@ Everything stays on your machine. It reads Claude Code's files in `~/.claude` wi
 
 ```sh
 pnpm install
-pnpm type-check
-pnpm test      # unit (node:test) + integration (downloads VS Code once)
+pnpm check     # format, lint, type-check (Vite+)
+pnpm test      # unit (Vitest) + integration (downloads VS Code once)
 pnpm package   # builds a .vsix
 ```
 

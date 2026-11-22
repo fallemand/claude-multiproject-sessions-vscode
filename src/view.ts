@@ -26,7 +26,8 @@ const defaultState: ViewState = { filter: "all", groupBy: "repo", layout: "compa
 const repoScheme = "claude-repo";
 const moreScheme = "claude-more";
 
-const setting = <T>(key: string, fallback: T) => vscode.workspace.getConfiguration("claudeSessions").get<T>(key, fallback);
+const setting = <T>(key: string, fallback: T) =>
+  vscode.workspace.getConfiguration("claudeSessions").get<T>(key, fallback);
 
 export const where: Record<Entrypoint, string> = { cli: "terminal", vscode: "VS Code", desktop: "desktop app" };
 
@@ -55,7 +56,10 @@ const byRecent = (a: Session, b: Session) =>
 // Borrows the file icon theme's language icon through a fake `<repo>.<ext>` resource.
 const repoIcon = (repo?: Repo): Icon =>
   repo?.language
-    ? { iconPath: vscode.ThemeIcon.File, resourceUri: vscode.Uri.from({ scheme: repoScheme, path: `/${repo.name}.${repo.language}` }) }
+    ? {
+        iconPath: vscode.ThemeIcon.File,
+        resourceUri: vscode.Uri.from({ scheme: repoScheme, path: `/${repo.name}.${repo.language}` }),
+      }
     : { iconPath: new vscode.ThemeIcon(repo ? "repo" : "folder-library") };
 
 // Only the current project (the one open in this window, worktrees included) is expanded.
@@ -67,22 +71,24 @@ const groupByRepo = (sessions: Session[], currentRepos: Set<string>): Group[] =>
     if (list) list.push(s);
     else byPath.set(path, [s]);
   }
-  return [...byPath]
-    .map(([path, list]): Group => {
-      const live = list.filter(isLive).length;
-      return {
-        kind: "group",
-        id: `repo:${path}`,
-        label: list[0].repo?.name ?? "Non-git folders",
-        tooltip: list[0].repo ? undefined : "Sessions started in folders outside a git repository",
-        description: live ? `${live} live` : undefined,
-        expanded: currentRepos.has(path),
-        ...repoIcon(list[0].repo),
-        sessions: list,
-      };
-    })
-    // Current project first.
-    .sort((a, b) => Number(b.expanded) - Number(a.expanded) || byRecent(a.sessions[0], b.sessions[0]));
+  return (
+    [...byPath]
+      .map(([path, list]): Group => {
+        const live = list.filter(isLive).length;
+        return {
+          kind: "group",
+          id: `repo:${path}`,
+          label: list[0].repo?.name ?? "Non-git folders",
+          tooltip: list[0].repo ? undefined : "Sessions started in folders outside a git repository",
+          description: live ? `${live} live` : undefined,
+          expanded: currentRepos.has(path),
+          ...repoIcon(list[0].repo),
+          sessions: list,
+        };
+      })
+      // Current project first.
+      .sort((a, b) => Number(b.expanded) - Number(a.expanded) || byRecent(a.sessions[0], b.sessions[0]))
+  );
 };
 
 const groupByStatus = (sessions: Session[]): Group[] =>
@@ -108,7 +114,10 @@ const row = (s: Session, { layout, groupBy }: ViewState) => {
     case "compact":
       return { label: s.name, description: join(repo, ago(s.updatedAt)) };
     case "detailed":
-      return { label: s.name, description: join(repo, pr, branch, s.worktree && "worktree", where[s.entrypoint], ago(s.updatedAt)) };
+      return {
+        label: s.name,
+        description: join(repo, pr, branch, s.worktree && "worktree", where[s.entrypoint], ago(s.updatedAt)),
+      };
     case "branchFirst":
       return { label: branch, description: join(repo, s.name, ago(s.updatedAt)) };
   }
@@ -157,7 +166,15 @@ const moreItem = (toggle: MoreToggle, expanded: boolean) =>
 const signature = (sessions: Session[]) =>
   JSON.stringify([
     Math.floor(Date.now() / 60_000),
-    sessions.map((s) => [s.id, s.name, s.status, Math.floor(s.updatedAt.getTime() / 60_000), s.worktree, s.pr?.state, s.repo?.currentBranch]),
+    sessions.map((s) => [
+      s.id,
+      s.name,
+      s.status,
+      Math.floor(s.updatedAt.getTime() / 60_000),
+      s.worktree,
+      s.pr?.state,
+      s.repo?.currentBranch,
+    ]),
   ]);
 
 const sessionItem = (s: Session, state: ViewState) => {

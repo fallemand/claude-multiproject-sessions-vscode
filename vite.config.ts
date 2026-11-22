@@ -1,0 +1,26 @@
+import { defineConfig } from "vite-plus";
+
+export default defineConfig({
+  pack: {
+    entry: "src/extension.ts",
+    format: "cjs",
+    platform: "node",
+    outDir: "dist",
+    fixedExtension: false,
+    sourcemap: true,
+    // Provided by VS Code at runtime.
+    deps: { neverBundle: ["vscode"] },
+  },
+  test: {
+    include: ["src/**/*.test.ts"],
+    // Runs inside VS Code via @vscode/test-cli.
+    exclude: ["src/test/**"],
+  },
+  fmt: {
+    printWidth: 120,
+    ignorePatterns: ["pnpm-lock.yaml"],
+  },
+  lint: {
+    options: { typeAware: true, typeCheck: true },
+  },
+});

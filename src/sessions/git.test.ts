@@ -2,37 +2,55 @@ import * as assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { after, test } from "node:test";
+import { afterAll, test } from "vite-plus/test";
 import { createFixture } from "../test/fixture";
 import { loadPrs, resolveRepo } from "./git";
 
 const fx = createFixture(process.pid);
-after(() => rmSync(fx.root, { recursive: true, force: true }));
+afterAll(() => rmSync(fx.root, { recursive: true, force: true }));
 
 test("resolves repos, worktrees and deleted worktrees", async () => {
   const main = await resolveRepo(fx.alpha);
   assert.equal(main.worktree, false);
-  assert.deepEqual({ ...main.repo, branches: [...(main.repo?.branches ?? [])].sort() }, {
-    name: "alpha",
-    path: fx.alpha,
-    language: "ts",
-    currentBranch: "main",
-    branches: ["feature", "main"],
-  });
+  assert.deepEqual(
+    { ...main.repo, branches: [...(main.repo?.branches ?? [])].sort() },
+    {
+      name: "alpha",
+      path: fx.alpha,
+      language: "ts",
+      currentBranch: "main",
+      branches: ["feature", "main"],
+    },
+  );
   assert.deepEqual(await resolveRepo(fx.worktree).then((r) => [r.repo?.path, r.worktree]), [fx.alpha, true]);
-  assert.deepEqual(await resolveRepo(join(fx.alpha, ".claude/worktrees/gone")).then((r) => [r.repo?.path, r.worktree]), [fx.alpha, true]);
+  assert.deepEqual(
+    await resolveRepo(join(fx.alpha, ".claude/worktrees/gone")).then((r) => [r.repo?.path, r.worktree]),
+    [fx.alpha, true],
+  );
   assert.deepEqual(await resolveRepo(fx.notes), { worktree: false });
 });
-
 
 test("maps gh output to one PR per branch", async () => {
   const path = process.env.PATH;
   process.env.PATH = `${fx.bin}:${path}`;
   const withPrs = mkdtempSync(join(tmpdir(), "cms-gh-"));
-  const pr = (number: number, headRefName: string, state: string, isDraft = false) => ({ number, title: `PR ${number}`, state, isDraft, url: `u/${number}`, headRefName });
+  const pr = (number: number, headRefName: string, state: string, isDraft = false) => ({
+    number,
+    title: `PR ${number}`,
+    state,
+    isDraft,
+    url: `u/${number}`,
+    headRefName,
+  });
   writeFileSync(
     join(withPrs, "prs.json"),
-    JSON.stringify([pr(1, "feature", "CLOSED"), pr(2, "feature", "OPEN", true), pr(3, "main", "MERGED"), pr(5, "main", "MERGED"), pr(4, "fix", "OPEN")]),
+    JSON.stringify([
+      pr(1, "feature", "CLOSED"),
+      pr(2, "feature", "OPEN", true),
+      pr(3, "main", "MERGED"),
+      pr(5, "main", "MERGED"),
+      pr(4, "fix", "OPEN"),
+    ]),
   );
   try {
     const prs = await loadPrs(withPrs);
