@@ -10,10 +10,7 @@ const layouts: { label: string; detail: string; value: ViewState["layout"] }[] =
   { label: "Branch first", detail: "Branch · name · time", value: "branchFirst" },
 ];
 
-export const registerCommands = (
-  tree: SessionsView,
-  refresh: () => Promise<void>,
-): vscode.Disposable[] => {
+export const registerCommands = (tree: SessionsView, refresh: () => Promise<void>): vscode.Disposable[] => {
   const commands = {
     refresh,
     showLiveOnly: () => tree.setState({ filter: "live" }),

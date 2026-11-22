@@ -14,7 +14,9 @@ const retryTtl = 60_000;
 
 const run = (cmd: string, args: string[], cwd?: string, timeout = 5_000) =>
   new Promise<string | undefined>((resolve) =>
-    execFile(cmd, args, { cwd, timeout, windowsHide: true }, (error, stdout) => resolve(error ? undefined : stdout.trim())),
+    execFile(cmd, args, { cwd, timeout, windowsHide: true }, (error, stdout) =>
+      resolve(error ? undefined : stdout.trim()),
+    ),
   );
 
 const markers: [string | RegExp, string][] = [
@@ -30,7 +32,9 @@ const markers: [string | RegExp, string][] = [
 
 const detectLanguage = async (path: string) => {
   const files = await readdir(path).catch(() => [] as string[]);
-  return markers.find(([marker]) => files.some((f) => (typeof marker === "string" ? f === marker : marker.test(f))))?.[1];
+  return markers.find(([marker]) =>
+    files.some((f) => (typeof marker === "string" ? f === marker : marker.test(f))),
+  )?.[1];
 };
 
 const gitIdentity = async (dir: string): Promise<Identity | undefined> => {
@@ -108,14 +112,24 @@ export const resolveRepo = async (cwd: string): Promise<RepoInfo> => {
   try {
     const { path, worktree } = await identityOf(cwd);
     if (!path) return { worktree };
-    const [language, { current, all }] = await Promise.all([memo(languages, path, () => detectLanguage(path)), branchState(path)]);
+    const [language, { current, all }] = await Promise.all([
+      memo(languages, path, () => detectLanguage(path)),
+      branchState(path),
+    ]);
     return { repo: { name: basename(path), path, language, currentBranch: current, branches: all }, worktree };
   } catch {
     return { worktree: false };
   }
 };
 
-type GhPr = { number: number; title: string; state: "OPEN" | "MERGED" | "CLOSED"; isDraft: boolean; url: string; headRefName: string };
+type GhPr = {
+  number: number;
+  title: string;
+  state: "OPEN" | "MERGED" | "CLOSED";
+  isDraft: boolean;
+  url: string;
+  headRefName: string;
+};
 
 const prTtl = 5 * 60_000;
 const prFields = "number,title,state,isDraft,url,headRefName";
@@ -146,7 +160,12 @@ const prCache = new Map<string, { at: number; prs: Promise<Map<string, Pr>> }>()
 export const loadPrs = (repoPath: string): Promise<Map<string, Pr>> => {
   const hit = prCache.get(repoPath);
   if (hit && Date.now() - hit.at < prTtl) return hit.prs;
-  const prs = run("gh", ["pr", "list", "--state", "all", "--author", "@me", "--json", prFields, "--limit", "100"], repoPath, 20_000).then(parsePrs);
+  const prs = run(
+    "gh",
+    ["pr", "list", "--state", "all", "--author", "@me", "--json", prFields, "--limit", "100"],
+    repoPath,
+    20_000,
+  ).then(parsePrs);
   prCache.set(repoPath, { at: Date.now(), prs });
   return prs;
 };

@@ -46,7 +46,8 @@ const git = async (cwd: string, ...args: string[]) => (await run("git", ["-C", c
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const tildify = (path: string) => path.replace(homedir(), "~");
-const errorText = (e: unknown) => (e as { stderr?: string }).stderr?.trim() || (e instanceof Error ? e.message : String(e));
+const errorText = (e: unknown) =>
+  (e as { stderr?: string }).stderr?.trim() || (e instanceof Error ? e.message : String(e));
 
 const defaultTarget = (): Target =>
   vscode.workspace.getConfiguration("claudeSessions").get("openIn") === "editor" ? "editor" : "terminal";
@@ -144,7 +145,11 @@ export const resumeHere = async (
     }
   }
   log.info(`Resuming ${s.id} in a terminal at ${folder}`);
-  const terminal = vscode.window.createTerminal({ name: s.name, cwd: folder, iconPath: new vscode.ThemeIcon("sparkle") });
+  const terminal = vscode.window.createTerminal({
+    name: s.name,
+    cwd: folder,
+    iconPath: new vscode.ThemeIcon("sparkle"),
+  });
   terminal.show();
   terminal.sendText(`claude --resume ${s.id}`);
 };
@@ -183,13 +188,22 @@ const revealLive = async (s: Session) => {
   const owner = s.pid && (await findOwner(s.pid));
   if (!owner) return false;
   const target: Target = owner.shellPid ? "terminal" : "editor";
-  log.info(`${s.id} runs in window ${owner.window.pid} (${owner.shellPid ? `terminal ${owner.shellPid}` : "Claude tab"})`);
+  log.info(
+    `${s.id} runs in window ${owner.window.pid} (${owner.shellPid ? `terminal ${owner.shellPid}` : "Claude tab"})`,
+  );
   if (owner.window.pid === process.pid) {
     if (owner.shellPid) return showTerminal([owner.shellPid]);
     await resumeHere(s, "editor");
     return true;
   }
-  writeHandoff({ sessionId: s.id, name: s.name, folder: s.cwd, target, window: owner.window.pid, shellPid: owner.shellPid });
+  writeHandoff({
+    sessionId: s.id,
+    name: s.name,
+    folder: s.cwd,
+    target,
+    window: owner.window.pid,
+    shellPid: owner.shellPid,
+  });
   return focusWindow(owner.window);
 };
 
@@ -205,7 +219,9 @@ const goTo = async (s: Session, folder: string, target: Target, resume: boolean,
     (w) => w.folders.includes(folder) || (target === "terminal" && w.folders.some((f) => folder.startsWith(f + sep))),
   );
   if (resume) writeHandoff({ sessionId: s.id, name: s.name, folder, target, window: owner?.pid });
-  log.info(`Opening ${folder} in ${owner ? `window ${owner.pid}` : "a new window"}${resume ? `, handing off ${s.id} (${target})` : ""}`);
+  log.info(
+    `Opening ${folder} in ${owner ? `window ${owner.pid}` : "a new window"}${resume ? `, handing off ${s.id} (${target})` : ""}`,
+  );
   if (!owner || !(await focusWindow(owner))) await openWindow(folder);
 };
 
@@ -252,7 +268,9 @@ export const consumeHandoff = async (): Promise<void> => {
       }
       const mine = handoff.window ? handoff.window === process.pid : isHere(handoff.folder, handoff.target);
       if (!mine) {
-        log.info(`Handoff for ${handoff.folder} is not for this window (${workspacePaths().join(", ") || "no folder"})`);
+        log.info(
+          `Handoff for ${handoff.folder} is not for this window (${workspacePaths().join(", ") || "no folder"})`,
+        );
         return;
       }
       clearHandoff();

@@ -1,2 +1,2 @@
 allowBuilds:
-  '@vscode/vsce-sign': false
+  "@vscode/vsce-sign": false

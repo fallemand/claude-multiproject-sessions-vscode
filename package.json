@@ -1,45 +1,33 @@
 {
   "name": "claude-multiproject-sessions",
   "displayName": "Multi-Project Sessions for Claude Code",
-  "description": "All your Claude Code sessions across projects in one list. One click opens a session's worktree in VS Code and resumes it.",
   "version": "0.0.1",
   "private": true,
-  "packageManager": "pnpm@12.3.4",
-  "publisher": "fallemand",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fallemand/claude-multiproject-sessions-vscode"
-  },
-  "homepage": "https://github.com/fallemand/claude-multiproject-sessions-vscode#readme",
-  "bugs": {
-    "url": "https://github.com/fallemand/claude-multiproject-sessions-vscode/issues"
-  },
-  "engines": {
-    "vscode": "^1.95.0"
-  },
-  "icon": "media/logo.png",
-  "galleryBanner": {
-    "color": "#C15F3C",
-    "theme": "dark"
-  },
+  "description": "All your Claude Code sessions across projects in one list. One click opens a session's worktree in VS Code and resumes it.",
   "categories": [
     "AI",
     "Other"
   ],
   "keywords": [
+    "agent",
     "claude",
     "claude code",
-    "sessions",
-    "resume",
-    "worktree",
     "git",
-    "agent"
+    "resume",
+    "sessions",
+    "worktree"
   ],
+  "homepage": "https://github.com/fallemand/claude-multiproject-sessions-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/fallemand/claude-multiproject-sessions-vscode/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fallemand/claude-multiproject-sessions-vscode"
+  },
+  "publisher": "fallemand",
   "main": "./dist/extension.js",
-  "activationEvents": [
-    "onStartupFinished"
-  ],
   "scripts": {
     "build": "vp pack",
     "watch": "vp pack --watch",
@@ -49,7 +37,16 @@
     "test": "vp test && pnpm test:integration",
     "test:integration": "vp pack && rm -rf out && tsc -p . && vscode-test"
   },
-
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.0.0",
+    "@types/vscode": "~1.95.0",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.1.1",
+    "typescript": "^5.9.0",
+    "vite-plus": "1.7.0"
+  },
   "contributes": {
     "configuration": {
       "title": "Claude Sessions",
@@ -289,14 +286,16 @@
       }
     ]
   },
-  "devDependencies": {
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^22.0.0",
-    "@types/vscode": "~1.95.0",
-    "@vscode/test-cli": "^0.0.15",
-    "@vscode/test-electron": "^3.1.0",
-    "@vscode/vsce": "^4.1.1",
-    "typescript": "^5.9.0",
-    "vite-plus": "1.7.0"
-  }
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "icon": "media/logo.png",
+  "galleryBanner": {
+    "color": "#C15F3C",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "packageManager": "pnpm@12.3.4"
 }

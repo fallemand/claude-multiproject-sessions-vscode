@@ -76,7 +76,12 @@ export const ancestors = async (pid: number): Promise<number[]> => {
   if (process.platform === "win32") return [];
   try {
     const { stdout } = await run("ps", ["-A", "-o", "pid=,ppid="]);
-    const parent = new Map(stdout.trim().split("\n").map((line) => line.trim().split(/\s+/).map(Number) as [number, number]));
+    const parent = new Map(
+      stdout
+        .trim()
+        .split("\n")
+        .map((line) => line.trim().split(/\s+/).map(Number) as [number, number]),
+    );
     const chain: number[] = [];
     for (let p = parent.get(pid); p && p > 1 && chain.length < 10; p = parent.get(p)) chain.push(p);
     return chain;

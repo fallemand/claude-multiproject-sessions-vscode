@@ -59,7 +59,9 @@ export const activate = (context: vscode.ExtensionContext) => {
   const poll = setInterval(() => void refresh(), pollInterval);
   void updateCurrentRepos().then(refresh);
   const showWhenVisible = view.onDidChangeVisibility(({ visible }) => visible && stale && void refresh());
-  log.info(`Activated in ${vscode.workspace.workspaceFolders?.map(({ uri }) => uri.fsPath).join(", ") || "a window without folder"}`);
+  log.info(
+    `Activated in ${vscode.workspace.workspaceFolders?.map(({ uri }) => uri.fsPath).join(", ") || "a window without folder"}`,
+  );
   void consumeHandoff();
 
   context.subscriptions.push(
