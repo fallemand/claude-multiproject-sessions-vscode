@@ -39,5 +39,7 @@ export const registerCommands = (tree: SessionsView, refresh: () => Promise<void
     },
   };
 
-  return Object.entries(commands).map(([name, run]) => vscode.commands.registerCommand(`claudeSessions.${name}`, run));
+  return Object.entries(commands).map(([name, run]) =>
+    vscode.commands.registerCommand(`multirepoSessions.${name}`, run),
+  );
 };

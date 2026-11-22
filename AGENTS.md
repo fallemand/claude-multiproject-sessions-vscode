@@ -1,4 +1,4 @@
-# Multi-Project Sessions for Claude Code (VS Code extension)
+# Multi-Repo Sessions for Claude Code (VS Code extension)
 
 Sidebar listing Claude Code sessions grouped by repo; clicking one opens its worktree/branch and resumes the session.
 
@@ -9,6 +9,10 @@ UI principle: the default view stays minimal (repo icon, then name + time); ever
 `pnpm install`, then F5 in VS Code (Extension Development Host); ⌘R in the dev host reloads after changes (`watch` task rebundles), ⇧⌘F5 for `package.json`/launch changes. `pnpm check` (format, lint, types) and `pnpm test` before committing.
 Tooling is Vite+ (`vite.config.ts`): `vp pack` bundles `src/extension.ts` into `dist/extension.js` (the only code in the `.vsix`), `vp check` runs Oxfmt + Oxlint + type-check, `vp test` runs Vitest.
 
+## Release
+
+PR titles are Conventional Commits (squash merges use them): `feat:` → minor, `fix:` → patch, others don't release. Release Please keeps a release PR with the next version and CHANGELOG; merging it tags, attaches the `.vsix` to the GitHub release and publishes to Open VSX (`OVSX_REGISTRY_PAT`), plus the VS Marketplace once a `VSCE_PAT` secret exists (`.github/workflows/release.yml`).
+
 ## Tests
 
 - `src/test/fixture.ts` builds a temp fake `~/.claude` + git repos (alpha with a worktree and a live session, beta, a non-git folder) and stub `gh`/`claude` scripts. Shared by both suites.
@@ -16,13 +20,13 @@ Tooling is Vite+ (`vite.config.ts`): `vp pack` bundles `src/extension.ts` into `
 - `pnpm test:integration`: `src/test/extension.test.ts` via `@vscode/test-cli` (mocha, tdd) in a downloaded VS Code, against the bundled extension (test files compiled with `tsc` to `out/`); `.vscode-test.mjs` creates the fixture, points `CLAUDE_CONFIG_DIR`/`TMPDIR`/`PATH`/user data at it and opens alpha. `activate` returns `{ tree }` only in test mode.
 - Not covered: cross-window handoff/focus, modals (live-elsewhere warning, worktree prompt), the Claude tab. Test those manually with the packaged extension.
 
-Cross-window flows (click → other window → resume) only work with the extension installed: windows opened from the dev host don't load the dev extension. `pnpm package && code --install-extension claude-multiproject-sessions-0.0.1.vsix --force`, then reload the windows. Logs: Output → "Claude Sessions" (per window, also under `~/Library/Application Support/Code/logs/*/window*/exthost/fallemand.claude-multiproject-sessions/`).
+Cross-window flows (click → other window → resume) only work with the extension installed: windows opened from the dev host don't load the dev extension. `pnpm package && code --install-extension claude-multirepo-sessions-*.vsix --force`, then reload the windows. Logs: Output → "Multi-Repo Sessions" (per window, also under `~/Library/Application Support/Code/logs/*/window*/exthost/fallemand.claude-multirepo-sessions/`).
 
 ## Structure
 
 - `src/extension.ts` entry point: activation, refresh (watcher + poll), badge, handoff on focus
 - `src/view.ts` the tree: grouping, "N past" / "N more projects" / "Load N more" rows, filter, row layouts, tooltip
-- `src/log.ts` Output channel "Claude Sessions"
+- `src/log.ts` Output channel "Multi-Repo Sessions"
 - `src/sessions/` where the data comes from: `model.ts` (`Session`/`Repo`/`ClaudeSession` types, `isLive`, `needsWorktree`), `claude.ts` (session files, transcripts, watcher), `git.ts` (repo/worktree/branch/language, PRs via `gh`, attaches both to sessions)
 - `src/actions/` what the user can do: `commands.ts` (toolbar and row actions), `open.ts` (click flow: reveal live sessions where they run, worktree prompt, live-elsewhere warning, window switch + handoff, resume in terminal/Claude tab), `windows.ts` (shared folder, window registry, process ancestors)
 - `src/test/` integration test and the fixture both suites share
