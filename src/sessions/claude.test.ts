@@ -1,11 +1,11 @@
 import * as assert from "node:assert/strict";
 import { rmSync } from "node:fs";
-import { after, test } from "node:test";
+import { afterAll, test } from "vite-plus/test";
 import { createFixture } from "../test/fixture";
 import { readClaudeSessions } from "./claude";
 
 const fx = createFixture(process.pid);
-after(() => rmSync(fx.root, { recursive: true, force: true }));
+afterAll(() => rmSync(fx.root, { recursive: true, force: true }));
 
 test("reads sessions from transcripts and live files", async () => {
   const sessions = new Map((await readClaudeSessions(fx.claudeDir)).map((s) => [s.id, s]));

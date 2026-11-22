@@ -1,7 +1,5 @@
 **
-!out/*
-!out/sessions/!(*.test).js*
-!out/actions/**
+!dist/extension.js
 !media/logo.png
 !media/icon.svg
 !package.json

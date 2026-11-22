@@ -2,12 +2,12 @@ import * as assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { after, test } from "node:test";
+import { afterAll, test } from "vite-plus/test";
 import { createFixture } from "../test/fixture";
 import { loadPrs, resolveRepo } from "./git";
 
 const fx = createFixture(process.pid);
-after(() => rmSync(fx.root, { recursive: true, force: true }));
+afterAll(() => rmSync(fx.root, { recursive: true, force: true }));
 
 test("resolves repos, worktrees and deleted worktrees", async () => {
   const main = await resolveRepo(fx.alpha);

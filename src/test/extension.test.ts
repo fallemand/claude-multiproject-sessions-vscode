@@ -22,7 +22,7 @@ const setting = (key: string, value: unknown) =>
 
 suite("extension", () => {
   let tree: SessionsView;
-  const labels = (node?: unknown) => tree.getChildren(node as never).map((n) => tree.getTreeItem(n).label);
+  const labels = (node?: unknown) => tree.getChildren(node as never).map((n) => tree.getTreeItem(n).label as string);
   const group = (label: string) => tree.getChildren().find((n) => tree.getTreeItem(n).label === label);
 
   suiteSetup(async () => {
@@ -43,7 +43,7 @@ suite("extension", () => {
     await vscode.commands.executeCommand("claudeSessions.toggleMore", toggle);
     assert.deepEqual(labels(group("alpha")), ["Live in worktree", "1 past", "Renamed alpha session"]);
     assert.equal(tree.getTreeItem(group("beta")!).collapsibleState, vscode.TreeItemCollapsibleState.Collapsed);
-    assert.match(String(labels(group("beta"))[2]), /^pasted pasted /);
+    assert.match(labels(group("beta"))[2], /^pasted pasted /);
 
     await setting("claudeSessions.maxProjects", 1);
     await setting("claudeSessions.maxPastSessions", 2);

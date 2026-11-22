@@ -32,7 +32,7 @@ export const registerWindow = (): vscode.Disposable => {
       mkdirSync(windowsDir, { recursive: true });
       writeFileSync(windowFile(info.pid), JSON.stringify(info));
     } catch (e) {
-      log.error(`Could not register this window: ${e}`);
+      log.error(`Could not register this window: ${String(e)}`);
     }
   };
   void write();

@@ -36,20 +36,20 @@
     "git",
     "agent"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "activationEvents": [
     "onStartupFinished"
   ],
   "scripts": {
-    "build": "rm -rf out && tsc -p .",
-    "watch": "tsc -watch -p .",
-    "type-check": "tsc --noEmit -p .",
+    "build": "vp pack",
+    "watch": "vp pack --watch",
+    "check": "vp check",
     "vscode:prepublish": "pnpm build",
     "package": "vsce package --no-dependencies",
-    "test": "pnpm test:unit && vscode-test",
-    "test:unit": "pnpm build && node --test \"out/sessions/*.test.js\"",
-    "test:integration": "pnpm build && vscode-test"
+    "test": "vp test && pnpm test:integration",
+    "test:integration": "vp pack && rm -rf out && tsc -p . && vscode-test"
   },
+
   "contributes": {
     "configuration": {
       "title": "Claude Sessions",
@@ -296,6 +296,7 @@
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^4.1.1",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "vite-plus": "1.7.0"
   }
 }

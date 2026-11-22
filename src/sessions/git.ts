@@ -4,7 +4,7 @@ import { readdir } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { ClaudeSession, Pr, PrState, Repo, Session } from "./model";
 
-export type RepoInfo = { repo?: Repo; worktree: boolean };
+type RepoInfo = { repo?: Repo; worktree: boolean };
 
 type Identity = { path?: string; worktree: boolean };
 
