@@ -16,7 +16,7 @@ const watchDelay = 1_000;
 const currentRepos = async () => {
   const folders = (vscode.workspace.workspaceFolders ?? []).map(({ uri }) => uri.fsPath);
   const infos = await Promise.all(folders.map(resolveRepo));
-  return new Set(infos.flatMap(({ repo }) => (repo ? [repo.path] : [])));
+  return new Set(infos.map(({ repo }, i) => repo?.path ?? folders[i]));
 };
 
 export const activate = (context: vscode.ExtensionContext) => {

@@ -46,7 +46,7 @@ suite("extension", () => {
     );
 
     // Current project (the workspace folder) first and expanded; the live session first, past ones behind a toggle.
-    assert.deepEqual(labels(), ["alpha", "beta", "Non-git folders"]);
+    assert.deepEqual(labels(), ["alpha", "beta", "notes"]);
     assert.deepEqual(labels(group("alpha")), ["Live in worktree", "1 past"]);
     const toggle = tree.getChildren(group("alpha") as never)[1];
     await vscode.commands.executeCommand("multirepoSessions.toggleMore", toggle);

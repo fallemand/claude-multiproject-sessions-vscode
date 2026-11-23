@@ -1,3 +1,4 @@
+import { basename } from "node:path";
 import * as vscode from "vscode";
 import { Entrypoint, isLive, needsWorktree, PrState, Repo, Session, SessionStatus } from "./sessions/model";
 
@@ -60,13 +61,17 @@ const repoIcon = (repo?: Repo): Icon =>
         iconPath: vscode.ThemeIcon.File,
         resourceUri: vscode.Uri.from({ scheme: repoScheme, path: `/${repo.name}.${repo.language}` }),
       }
-    : { iconPath: new vscode.ThemeIcon(repo ? "repo" : "folder-library") };
+    : { iconPath: new vscode.ThemeIcon(repo ? "repo" : "folder") };
+
+// Sessions outside git group by the folder they run in.
+const projectPath = (s: Session) => s.repo?.path ?? s.cwd;
+const projectName = (s: Session) => s.repo?.name ?? basename(s.cwd);
 
 // Only the current project (the one open in this window, worktrees included) is expanded.
 const groupByRepo = (sessions: Session[], currentRepos: Set<string>): Group[] => {
   const byPath = new Map<string, Session[]>();
   for (const s of [...sessions].sort(byRecent)) {
-    const path = s.repo?.path ?? "";
+    const path = projectPath(s);
     const list = byPath.get(path);
     if (list) list.push(s);
     else byPath.set(path, [s]);
@@ -78,8 +83,8 @@ const groupByRepo = (sessions: Session[], currentRepos: Set<string>): Group[] =>
         return {
           kind: "group",
           id: `repo:${path}`,
-          label: list[0].repo?.name ?? "Non-git folders",
-          tooltip: list[0].repo ? undefined : "Sessions started in folders outside a git repository",
+          label: projectName(list[0]),
+          tooltip: list[0].repo ? undefined : path,
           description: live ? `${live} live` : undefined,
           expanded: currentRepos.has(path),
           ...repoIcon(list[0].repo),
@@ -107,7 +112,7 @@ const groupByStatus = (sessions: Session[]): Group[] =>
     .filter((g) => g.sessions.length);
 
 const row = (s: Session, { layout, groupBy }: ViewState) => {
-  const repo = groupBy === "status" && s.repo?.name;
+  const repo = groupBy === "status" && projectName(s);
   const branch = s.branch ?? "no git";
   const pr = s.pr && (s.pr.state === "open" ? `#${s.pr.number}` : `#${s.pr.number} ${s.pr.state}`);
   switch (layout) {
