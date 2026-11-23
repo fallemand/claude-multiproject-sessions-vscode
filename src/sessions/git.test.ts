@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, test } from "vite-plus/test";
 import { createFixture } from "../test/fixture";
-import { loadPrs, resolveRepo } from "./git";
+import { loadPrs, ownsFolder, resolveRepo } from "./git";
 
 const fx = createFixture(process.pid);
 afterAll(() => rmSync(fx.root, { recursive: true, force: true }));
@@ -28,6 +28,15 @@ test("resolves repos, worktrees and deleted worktrees", async () => {
     [fx.alpha, true],
   );
   assert.deepEqual(await resolveRepo(fx.notes), { worktree: false });
+});
+
+test("owns nested folders only within the same checkout", () => {
+  assert.equal(ownsFolder(fx.alpha, join(fx.alpha, "src/app")), true);
+  assert.equal(ownsFolder(fx.notes, join(fx.notes, "drafts")), true);
+  assert.equal(ownsFolder(fx.root, fx.alpha), false);
+  assert.equal(ownsFolder(fx.root, join(fx.alpha, "src")), false);
+  assert.equal(ownsFolder(fx.alpha, fx.worktree), false);
+  assert.equal(ownsFolder(fx.alpha, `${fx.alpha}-other`), false);
 });
 
 test("maps gh output to one PR per branch", async () => {

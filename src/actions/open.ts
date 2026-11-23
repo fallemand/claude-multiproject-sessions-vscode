@@ -1,10 +1,11 @@
 import { execFile } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join, sep } from "node:path";
+import { join } from "node:path";
 import { promisify } from "node:util";
 import * as vscode from "vscode";
 import { log } from "../log";
+import { ownsFolder } from "../sessions/git";
 import { isLive, needsWorktree, Session } from "../sessions/model";
 import { where } from "../view";
 import { ancestors, otherWindows, sharedDir, thisWindow, WindowInfo } from "./windows";
@@ -58,8 +59,10 @@ const ask = (message: string, detail: string | undefined, ...items: (string | fa
 const workspacePaths = () => (vscode.workspace.workspaceFolders ?? []).map(({ uri }) => uri.fsPath);
 
 // A Claude tab runs in the workspace folder, so it needs an exact match; a terminal can start anywhere inside one.
-const isHere = (folder: string, target: Target) =>
-  workspacePaths().some((path) => path === folder || (target === "terminal" && folder.startsWith(path + sep)));
+const opensIn = (folders: string[], folder: string, target: Target) =>
+  folders.some((f) => f === folder || (target === "terminal" && ownsFolder(f, folder)));
+
+const isHere = (folder: string, target: Target) => opensIn(workspacePaths(), folder, target);
 
 const worktreeFor = async (repo: string, branch: string) =>
   (await git(repo, "worktree", "list", "--porcelain"))
@@ -215,9 +218,7 @@ const goTo = async (s: Session, folder: string, target: Target, resume: boolean,
     return;
   }
   // Another window with this folder (or, for a terminal, a folder containing it): focus it and resume there.
-  const owner = otherWindows().find(
-    (w) => w.folders.includes(folder) || (target === "terminal" && w.folders.some((f) => folder.startsWith(f + sep))),
-  );
+  const owner = otherWindows().find((w) => opensIn(w.folders, folder, target));
   if (resume) writeHandoff({ sessionId: s.id, name: s.name, folder, target, window: owner?.pid });
   log.info(
     `Opening ${folder} in ${owner ? `window ${owner.pid}` : "a new window"}${resume ? `, handing off ${s.id} (${target})` : ""}`,

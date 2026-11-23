@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
 import { readdir } from "node:fs/promises";
-import { basename, dirname, join } from "node:path";
+import { basename, dirname, join, sep } from "node:path";
 import { ClaudeSession, Pr, PrState, Repo, Session } from "./model";
 
 type RepoInfo = { repo?: Repo; worktree: boolean };
@@ -45,6 +45,11 @@ const gitIdentity = async (dir: string): Promise<Identity | undefined> => {
   const path = basename(commonDir) === ".git" ? dirname(commonDir) : toplevel;
   return { path, worktree: toplevel !== path };
 };
+
+// `folder` is `workspace` or inside it without crossing into another checkout (a nested repo or worktree has `.git`).
+export const ownsFolder = (workspace: string, folder: string): boolean =>
+  folder === workspace ||
+  (folder.startsWith(workspace + sep) && !existsSync(join(folder, ".git")) && ownsFolder(workspace, dirname(folder)));
 
 const looksLikeWorktree = (path: string) => /\/worktrees?\//.test(path);
 
