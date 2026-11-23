@@ -63,15 +63,14 @@ const repoIcon = (repo?: Repo): Icon =>
       }
     : { iconPath: new vscode.ThemeIcon(repo ? "repo" : "folder") };
 
-// Sessions outside git group by the folder they run in.
-const projectPath = (s: Session) => s.repo?.path ?? s.cwd;
 const projectName = (s: Session) => s.repo?.name ?? basename(s.cwd);
 
 // Only the current project (the one open in this window, worktrees included) is expanded.
 const groupByRepo = (sessions: Session[], currentRepos: Set<string>): Group[] => {
   const byPath = new Map<string, Session[]>();
   for (const s of [...sessions].sort(byRecent)) {
-    const path = projectPath(s);
+    // Sessions outside git group by the folder they run in.
+    const path = s.repo?.path ?? s.cwd;
     const list = byPath.get(path);
     if (list) list.push(s);
     else byPath.set(path, [s]);
