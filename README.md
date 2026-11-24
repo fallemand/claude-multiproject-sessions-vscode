@@ -29,7 +29,7 @@ This puts them all in one place and takes you straight to the code.
 
 ## 🚀 Getting started
 
-1. Install the extension.
+1. Install the extension from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=fallemand.claude-multirepo-sessions), or [Open VSX](https://open-vsx.org/extension/fallemand/claude-multirepo-sessions) for Cursor, VSCodium and Windsurf.
 2. Open the Explorer and expand **Multi-Repo Sessions**.
 3. Click a session.
 
