@@ -79,7 +79,7 @@ export const activate = (context: vscode.ExtensionContext) => {
     vscode.workspace.onDidChangeConfiguration((e) => e.affectsConfiguration("multirepoSessions") && tree.rerender()),
     new vscode.Disposable(() => clearInterval(poll)),
     vscode.window.onDidChangeWindowState(({ focused }) => focused && void consumeHandoff()),
-    ...registerCommands(tree, refresh),
+    ...registerCommands(tree, refresh, context.extension),
   );
   // Integration tests read the tree directly.
   return context.extensionMode === vscode.ExtensionMode.Test ? { tree } : undefined;

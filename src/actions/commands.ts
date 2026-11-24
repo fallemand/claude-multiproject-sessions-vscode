@@ -10,7 +10,11 @@ const layouts: { label: string; detail: string; value: ViewState["layout"] }[] =
   { label: "Branch first", detail: "Branch · name · time", value: "branchFirst" },
 ];
 
-export const registerCommands = (tree: SessionsView, refresh: () => Promise<void>): vscode.Disposable[] => {
+export const registerCommands = (
+  tree: SessionsView,
+  refresh: () => Promise<void>,
+  extension: vscode.Extension<unknown>,
+): vscode.Disposable[] => {
   const commands = {
     refresh,
     showLiveOnly: () => tree.setState({ filter: "live" }),
@@ -36,6 +40,12 @@ export const registerCommands = (tree: SessionsView, refresh: () => Promise<void
     copyId: async (s: Session) => {
       await vscode.env.clipboard.writeText(s.id);
       vscode.window.setStatusBarMessage("Copied session ID", 2000);
+    },
+    // A new GitHub issue with the versions filled in, so it works in any VS Code fork.
+    sendFeedback: () => {
+      const { version, bugs } = extension.packageJSON;
+      const body = `\n\n---\nMulti-Repo Sessions ${version} · ${vscode.env.appName} ${vscode.version} · ${process.platform} ${process.arch}`;
+      void vscode.env.openExternal(vscode.Uri.parse(`${bugs.url}/new?body=${encodeURIComponent(body)}`));
     },
   };
 

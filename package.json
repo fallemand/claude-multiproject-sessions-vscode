@@ -122,6 +122,10 @@
         "title": "Show More"
       },
       {
+        "command": "multirepoSessions.sendFeedback",
+        "title": "Send Feedback…"
+      },
+      {
         "command": "multirepoSessions.open",
         "title": "Open Session",
         "icon": "$(go-to-file)"
@@ -190,6 +194,11 @@
           "command": "multirepoSessions.pickLayout",
           "when": "view == multirepoSessions.list",
           "group": "1_layout"
+        },
+        {
+          "command": "multirepoSessions.sendFeedback",
+          "when": "view == multirepoSessions.list",
+          "group": "2_help"
         }
       ],
       "view/item/context": [
