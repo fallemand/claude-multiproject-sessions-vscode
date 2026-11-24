@@ -3,6 +3,12 @@ name: Release
 on:
   push:
     branches: [main]
+  # Publishes an existing release to the VS Code Marketplace only, e.g. after a failed Marketplace step.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to publish to the VS Code Marketplace (e.g. v0.2.0)
+        required: true
 
 permissions:
   contents: write
@@ -21,13 +27,17 @@ jobs:
 
   publish:
     needs: release-please
-    if: needs.release-please.outputs.created == 'true'
+    if: needs.release-please.outputs.created == 'true' || inputs.tag
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write
+      # VS Code Marketplace Trusted Publishing: the publisher trusts this workflow, no token needed.
+      id-token: write
     env:
       GH_TOKEN: ${{ github.token }}
       OVSX_PAT: ${{ secrets.OVSX_REGISTRY_PAT }}
-      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      TAG: ${{ inputs.tag || needs.release-please.outputs.tag }}
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -36,8 +46,11 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm package
-      - run: gh release upload ${{ needs.release-please.outputs.tag }} *.vsix
-      - run: pnpm exec ovsx publish *.vsix
-      - if: env.VSCE_PAT
-        run: pnpm exec vsce publish --packagePath *.vsix
+      - if: inputs.tag
+        run: gh release download "$TAG" --pattern '*.vsix'
+      - if: ${{ !inputs.tag }}
+        run: |
+          pnpm package
+          gh release upload "$TAG" *.vsix
+          pnpm exec ovsx publish *.vsix
+      - run: pnpm exec vsce publish --oidc --packagePath *.vsix
