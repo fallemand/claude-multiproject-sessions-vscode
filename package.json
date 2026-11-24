@@ -1,7 +1,7 @@
 {
   "name": "claude-multirepo-sessions",
   "displayName": "Multi-Repo Sessions for Claude Code",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "All your Claude Code sessions across projects in one list. One click opens a session's worktree in VS Code and resumes it.",
   "categories": [
     "AI",
