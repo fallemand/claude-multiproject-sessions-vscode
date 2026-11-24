@@ -11,7 +11,7 @@ Tooling is Vite+ (`vite.config.ts`): `vp pack` bundles `src/extension.ts` into `
 
 ## PRs and releases
 
-PR titles are Conventional Commits without a ticket (`feat: Group sessions by status`); the squash merge uses them. `feat:` → minor, `fix:` → patch, other types don't release. Release Please keeps a release PR with the next version and CHANGELOG (don't edit those by hand); merging it publishes to Open VSX, and to the VS Marketplace once a `VSCE_PAT` secret exists.
+PR titles are Conventional Commits without a ticket (`feat: Group sessions by status`); the squash merge uses them. `feat:` → minor, `fix:` → patch, other types don't release. Release Please keeps a release PR with the next version and CHANGELOG (don't edit those by hand); merging it publishes to Open VSX (`OVSX_REGISTRY_PAT` secret) and the VS Marketplace (Trusted Publishing for `release.yml`, no token). Running the Release workflow by hand with a tag republishes that release to the Marketplace only.
 
 ## Tests
 
