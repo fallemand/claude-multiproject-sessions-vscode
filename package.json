@@ -123,7 +123,8 @@
       },
       {
         "command": "multirepoSessions.sendFeedback",
-        "title": "Send Feedback…"
+        "title": "Send Feedback…",
+        "icon": "$(feedback)"
       },
       {
         "command": "multirepoSessions.open",
@@ -188,7 +189,7 @@
         {
           "command": "multirepoSessions.refresh",
           "when": "view == multirepoSessions.list",
-          "group": "navigation@3"
+          "group": "0_refresh"
         },
         {
           "command": "multirepoSessions.pickLayout",
@@ -198,7 +199,7 @@
         {
           "command": "multirepoSessions.sendFeedback",
           "when": "view == multirepoSessions.list",
-          "group": "2_help"
+          "group": "navigation@3"
         }
       ],
       "view/item/context": [
