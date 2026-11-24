@@ -179,12 +179,12 @@
         {
           "command": "multirepoSessions.groupByStatus",
           "when": "view == multirepoSessions.list && multirepoSessions.groupBy == repo",
-          "group": "navigation@2"
+          "group": "1_layout@1"
         },
         {
           "command": "multirepoSessions.groupByRepo",
           "when": "view == multirepoSessions.list && multirepoSessions.groupBy == status",
-          "group": "navigation@2"
+          "group": "1_layout@1"
         },
         {
           "command": "multirepoSessions.refresh",
@@ -194,12 +194,12 @@
         {
           "command": "multirepoSessions.pickLayout",
           "when": "view == multirepoSessions.list",
-          "group": "1_layout"
+          "group": "1_layout@2"
         },
         {
           "command": "multirepoSessions.sendFeedback",
           "when": "view == multirepoSessions.list",
-          "group": "navigation@3"
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [
