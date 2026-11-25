@@ -9,12 +9,21 @@
   ],
   "keywords": [
     "agent",
+    "agents",
+    "anthropic",
     "claude",
     "claude code",
+    "claude-code",
+    "cursor",
     "git",
+    "history",
+    "multi-root",
     "resume",
+    "session manager",
     "sessions",
-    "worktree"
+    "workspace",
+    "worktree",
+    "worktrees"
   ],
   "homepage": "https://github.com/fallemand/claude-multirepo-sessions#readme",
   "bugs": {
@@ -304,7 +313,6 @@
     "color": "#C15F3C",
     "theme": "dark"
   },
-  "preview": true,
   "engines": {
     "vscode": "^1.95.0"
   },
