@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/fallemand/claude-multirepo-sessions/compare/v0.3.0...v0.3.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* Drop the Preview badge and add Marketplace keywords ([#19](https://github.com/fallemand/claude-multirepo-sessions/issues/19)) ([69a9678](https://github.com/fallemand/claude-multirepo-sessions/commit/69a96780d016909c34ebe90c14b10d74b3d45086))
+
 ## [0.3.0](https://github.com/fallemand/claude-multirepo-sessions/compare/v0.2.0...v0.3.0) (2026-11-25)
 
 
