@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/fallemand/claude-multirepo-sessions/compare/v0.2.0...v0.3.0) (2026-11-25)
+
+
+### Features
+
+* Send feedback from the view menu ([#16](https://github.com/fallemand/claude-multirepo-sessions/issues/16)) ([3b59ff2](https://github.com/fallemand/claude-multirepo-sessions/commit/3b59ff2e6f56540ce28cdd6285209cfd1b82322e))
+
 ## [0.2.0](https://github.com/fallemand/claude-multirepo-sessions/compare/v0.1.0...v0.2.0) (2026-11-23)
 
 
