@@ -18,7 +18,7 @@
 
 The Claude Code extension only shows the sessions of the project you have open. Run a few in parallel across projects and you're juggling windows and terminals, each session on its own branch or worktree. Reviewing what one changed means going back to a terminal, finding its worktree and opening yet another window.
 
-This puts them all in one place and takes you straight to the code. [Why I built it](https://fallemand.com/projects/multirepo-sessions).
+This puts them all in one place and takes you straight to the code. [Why I built it](https://fallemand.com/projects/multirepo-sessions/).
 
 ## ✨ Features
 
